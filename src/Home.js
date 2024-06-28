@@ -7,7 +7,8 @@ export default function Home(){
             <div className="sidebar-wrapper-left">
                 <aside className="sidebar-left">
                     <div>
-                        <img src="../logo.png"></img>
+                        <img src="../logo.png" alt="Logo"></img>
+                        <p>Bits</p>
                     </div>
                 </aside>
             </div>
