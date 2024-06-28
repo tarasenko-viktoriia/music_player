@@ -11,12 +11,12 @@ html, body {
 
 .sidebar-wrapper-left, .sidebar-wrapper-right {
   width: 20%;
-  background-color: black; 
+  background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
 }
 
 .sidebar-left, .sidebar-right {
   height: 100%;
-  background: linear-gradient(to top, #5B5198, #C03EFE, #834DC8);
+  background: linear-gradient(135deg, rgba(88, 53, 138, 0.5) 20%, rgba(46,38,56, 0.712) 50%);
 }
 
 .sidebar-wrapper-left .sidebar-left {
@@ -29,5 +29,6 @@ html, body {
 
 .main-container {
   width: 60%;
-  background-color: black;
+  background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
+
 }
