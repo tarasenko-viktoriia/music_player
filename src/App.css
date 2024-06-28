@@ -16,7 +16,11 @@ html, body {
 
 .sidebar-left, .sidebar-right {
   height: 100%;
-  background: linear-gradient(135deg, rgba(88, 53, 138, 0.5) 20%, rgba(46,38,56, 0.712) 50%);
+  background: linear-gradient(135deg, 
+  rgba(130, 107, 158, 0.5) 0%, 
+  rgba(130, 107, 158, 0.5) 20%, 
+  rgba(46, 38, 56, 0.712) 80%, 
+  rgba(46, 38, 56, 0.712) 100%);
 }
 
 .sidebar-wrapper-left .sidebar-left {

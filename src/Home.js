@@ -6,15 +6,17 @@ export default function Home(){
         <div className="home">
             <div className="sidebar-wrapper-left">
                 <aside className="sidebar-left">
-                    <div>lorefffffffffffffffffffffffffffffffff</div>
+                    <div>
+                        <img src="../logo.png"></img>
+                    </div>
                 </aside>
             </div>
             <main className="main-container">
-                <div>lorefffffffffffffffffffffffffffffffff</div>
+                <div></div>
             </main>
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
-                    <div>lorefffffffffffffffffffffffffffffffff</div>
+                    <div></div>
                 </aside>
             </div>
         </div>
