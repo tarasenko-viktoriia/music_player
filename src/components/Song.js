@@ -6,7 +6,7 @@ export default function Song(props){
     const song= useSelector (state => state.song.value);
     const dispatch = useDispatch();
     return (
-        <div onClick={()=>{
+        <div className="song" onClick={()=>{
             dispatch(changeSong(props));
             setTimeout(()=> {
                 if(song?.id !==props.id) {
@@ -16,7 +16,7 @@ export default function Song(props){
                 }
             })
         }}>
-            <img alt={props.title} src={props.artwork}/>
+            <img className="audio-img" alt={props.title} src={props.artwork}/>
             <div>{props.title}</div>
             {props.id === song?.id}
             <div>Artist: {props.artist}</div>

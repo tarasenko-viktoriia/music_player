@@ -21,21 +21,23 @@ export default function Home() {
                     </div>
                     <div>
                         <Menu isSongs={isSongs} setIsSongs={setIsSongs} />
-                        {song && <Player />}
                     </div>
                 </aside>
             </div>
             <main className="main-container">
-                <input
-                    className="search-input"
-                    type="search"
-                    placeholder="Search..."
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                ></input>
                 <div>
+                    <input
+                        className="search-input"
+                        type="search"
+                        placeholder="Search..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}>
+                    </input>
+                </div>
+                {song && <Player />}
+                <div >
                     {isSongs ? (
-                        <div>
+                        <div className="songs">
                             {MusicList.filter(data =>
                                 data.title.toLowerCase().includes(search.toLowerCase())
                             ).map((item) => (
