@@ -122,13 +122,19 @@ html, body {
 justify-content: center;
 }
 .song {
+  font-family: "Poppins";
+  display: flex;
   margin: 10px;
   cursor: pointer;
-  width: 170px;
+  width: 80%;
+  background-color: #352E38;
+  border-radius: 30px;
+  padding: 10px;
+  color: white;
 }
 .audio-img {
-  height: 150px;
-  border-radius: 15px;
+  height: 50px;
+  border-radius: 50%
 }
 
 

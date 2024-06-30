@@ -4,6 +4,7 @@ import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import Fade from '@mui/material/Fade';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { PlayList } from '../data/index';
 
 export default function FadeMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -23,8 +24,8 @@ export default function FadeMenu() {
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
-        endIcon={<KeyboardArrowDownIcon/>}
-        >
+        endIcon={<KeyboardArrowDownIcon />}
+      >
         Playlists
       </Button>
       <Menu
@@ -37,9 +38,11 @@ export default function FadeMenu() {
         onClose={handleClose}
         TransitionComponent={Fade}
       >
-        <MenuItem onClick={handleClose}>Playlists 1</MenuItem>
-        <MenuItem onClick={handleClose}>Playlists 2</MenuItem>
-        <MenuItem onClick={handleClose}>Playlists 3</MenuItem>
+        {PlayList.map((playlist) => (
+          <MenuItem key={playlist.id} onClick={handleClose}>
+            {playlist.title}
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );

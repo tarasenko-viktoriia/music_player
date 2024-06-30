@@ -25,7 +25,6 @@ export default function Playlist({search}) {
         : (
         <div>
             <div className="playlist-header">
-                <ArrowBackIosIcon onClick={()=>setIsPlaylist(true)}/>
                 {playList.title}
             </div>
             <div>
