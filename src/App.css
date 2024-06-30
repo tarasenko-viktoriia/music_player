@@ -1,5 +1,6 @@
 @import url(https://fonts.googleapis.com/css?family=Irish+Grover:regular&display=swap);
 @import url(https://fonts.googleapis.com/css?family=Poppins:300,regular,500,600&display=swap);
+@import url(https://fonts.googleapis.com/css?family=DM+Sans:regular&display=swap);
 
 html, body {
   height: 100%;
@@ -34,12 +35,7 @@ html, body {
   border-radius: 20px 0 0 20px;
 }
 
-.main-container {
-  width: 60%;
-  background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
-
-}
-
+/* left sidebar */
 .logo-container {
   display: flex;
   justify-content: center;
@@ -47,4 +43,31 @@ html, body {
   font-family:'Irish Grover', Courier, monospace;
   font-size: 55px;
   color: white;
+}
+
+/* main */
+.main-container {
+  display: flex;
+  justify-content: center;
+  padding: 40px;
+  width: 60%;
+  background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
+}
+
+.search-input {
+  font-family: "DM Sans";
+  font-size: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 32px;
+  border: none;
+  width: 80%;
+  height: 40px;
+  padding: 10px;
+  background-color: #352E38;
+  color: #8A7BAA;
+}
+.search-input:focus{
+  box-shadow: 0 0 10px rgb(255 255 255);
 }

@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 
 export default function Home(){
+    const [search, setSearch] = useState("");
     return (
         <div className="home">
             <div className="sidebar-wrapper-left">
@@ -13,7 +14,7 @@ export default function Home(){
                 </aside>
             </div>
             <main className="main-container">
-                <div></div>
+                <input className="search-input" type="search" placeholder="Search..." value={search} onChange={(e)=>setSearch(e.target.value)}></input>
             </main>
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
