@@ -12,7 +12,9 @@ export default function Menu({ isSongs, setIsSongs }) {
             </div>
             <div className="sidebar-left-component" onClick={() => setIsSongs(false)}>
                 <img src="./image/playlist.png" alt="Frame 2" />
-                <FadeMenu />
+                <a className="sidebar-left-item" setIsSongs={setIsSongs}>
+                    Playlists
+                </a>
             </div>
             <div className={`sidebar-left-component ${isSongs ? "active" : ""}`}>
                 <img src="./image/log_in.png" alt="Frame 3" />
