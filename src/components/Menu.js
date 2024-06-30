@@ -1,5 +1,4 @@
 import React from "react";
-import FadeMenu from "./sidebar-left-playlists";
 
 export default function Menu({ isSongs, setIsSongs }) {
     return (
