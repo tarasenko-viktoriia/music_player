@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import FadeMenu from "./components/sidebar-left-playlists";
+import Menu from "./components/Menu";
+import { MusicList, PlayList } from "./data";
+import { useSelector } from "react-redux";
+import Song from "./components/Song";
+import Playlist from "./components/Playlist";
+import Player from "./components/Player";
 
-
-
-export default function Home(){
+export default function Home() {
+    const [isSongs, setIsSongs] = useState(true);
+    const song = useSelector(state => state.song.value);
     const [search, setSearch] = useState("");
+
     return (
         <div className="home">
             <div className="sidebar-wrapper-left">
@@ -13,30 +19,33 @@ export default function Home(){
                         <img src="../logo.png" alt="Logo"></img>
                         <p>Bits</p>
                     </div>
-                    <div className="sidebar-left-items">
-                        <div>
-                            <div className="sidebar-left-component">
-                                <img src="./image/music.png" alt="Frame 1" />
-                                <a className="sidebar-left-item">
-                                    Library
-                                </a>
-                            </div>
-                            <div className="sidebar-left-component">
-                                <img src="./image/playlist.png" alt="Frame 2" />
-                                <FadeMenu/>
-                            </div>
-                        </div>
-                        <div className="sidebar-left-component">
-                            <img src="./image/log_in.png" alt="Frame 3" />
-                            <a className="sidebar-left-item">
-                                Log In
-                            </a>
-                        </div>
+                    <div>
+                        <Menu isSongs={isSongs} setIsSongs={setIsSongs} />
+                        {song && <Player />}
                     </div>
                 </aside>
             </div>
             <main className="main-container">
-                <input className="search-input" type="search" placeholder="Search..." value={search} onChange={(e)=>setSearch(e.target.value)}></input>
+                <input
+                    className="search-input"
+                    type="search"
+                    placeholder="Search..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                ></input>
+                <div>
+                    {isSongs ? (
+                        <div>
+                            {MusicList.filter(data =>
+                                data.title.toLowerCase().includes(search.toLowerCase())
+                            ).map((item) => (
+                                <Song key={item.id} {...item} />
+                            ))}
+                        </div>
+                    ) : (
+                        <Playlist search={search} />
+                    )}
+                </div>
             </main>
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
@@ -47,5 +56,5 @@ export default function Home(){
                 </aside>
             </div>
         </div>
-    )
+    );
 }
