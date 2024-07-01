@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import Song from "./components/Song";
 import Playlist from "./components/Playlist";
 import Player from "./components/Player";
+import Basic from "./components/Basic"
 
 export default function Home() {
     const [isSongs, setIsSongs] = useState(true);
@@ -56,6 +57,7 @@ export default function Home() {
                         <button>Log in</button>
                         {song && <Player />}
                     </div>
+                    <Basic />
                 </aside>
             </div>
         </div>
