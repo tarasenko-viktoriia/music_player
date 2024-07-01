@@ -35,18 +35,18 @@ export default function Home() {
                             onChange={(e) => setSearch(e.target.value)}>
                         </input>
                     </div>
-                    {song && <Player />}
-                        {isSongs ? (
-                            <div className="songs">
-                                {MusicList.filter(data =>
-                                    data.title.toLowerCase().includes(search.toLowerCase())
-                                ).map((item) => (
-                                    <Song key={item.id} {...item} />
-                                ))}
-                            </div>
-                        ) : (
-                            <Playlist search={search} />
-                        )}
+                    {/* {song && <Player />} */}
+                    {isSongs ? (
+                        <div className="songs">
+                            {MusicList.filter(data =>
+                                data.title.toLowerCase().includes(search.toLowerCase())
+                            ).map((item) => (
+                                <Song key={item.id} {...item} />
+                            ))}
+                        </div>
+                    ) : (
+                        <Playlist search={search} />
+                    )}
                 </div>
             </main>
             <div className="sidebar-wrapper-right">
@@ -54,9 +54,11 @@ export default function Home() {
                     <div className="log-in-container">
                         <p>To use all Bits functions, login into your account</p>
                         <button>Log in</button>
+                        {song && <Player />}
                     </div>
                 </aside>
             </div>
         </div>
     );
 }
+

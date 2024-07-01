@@ -16,10 +16,14 @@ export default function Song(props){
                 }
             })
         }}>
-            <img className="audio-img" alt={props.title} src={props.artwork}/>
-            <div>{props.title}</div>
-            {props.id === song?.id}
-            <div>Artist: {props.artist}</div>
+            <div className="song-container">
+                <img className="audio-img" alt={props.title} src={props.artwork}/>
+                <div className="name-song-container">
+                    <div className="song-title">{props.title}</div>
+                    {props.id === song?.id}
+                    <div className="song-artist">{props.artist}</div>
+                </div>
+            </div>
         </div>
     )
 }
