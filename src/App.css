@@ -13,7 +13,14 @@ html, body {
 
 .home {
   display: flex;
-  height: 100vh;
+  flex-direction: row;
+  min-height: 100vh;
+}
+
+.sidebar-wrapper-left, .main-container, .sidebar-wrapper-right {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
 
 .sidebar-wrapper-left, .sidebar-wrapper-right {
@@ -22,7 +29,7 @@ html, body {
 }
 
 .sidebar-left, .sidebar-right {
-  height: 100%;
+  flex-grow: 1;
   background: linear-gradient(135deg, 
   rgba(130, 107, 158, 0.5) 0%, 
   rgba(130, 107, 158, 0.5) 20%, 
@@ -40,7 +47,6 @@ html, body {
 
 /* left sidebar */
 .logo-container {
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,15 +54,18 @@ html, body {
   font-size: 55px;
   color: white;
 }
+
 .logo-container p{
   margin: 0;
 }
-.sidebar-left-items{
+
+.sidebar-left-items {
   display: flex;
   flex-direction: column;
   list-style-type: none;
   padding: 10px;
 }
+
 .sidebar-left-item, #fade-button {
   font-family: "Poppins";
   font-weight: 500;
@@ -65,7 +74,8 @@ html, body {
   text-transform: none;
   padding: 0;
 }
-.sidebar-left-component{
+
+.sidebar-left-component {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -78,9 +88,11 @@ html, body {
   font-size: 18px;
   padding: 15px;
 }
+
 .log-in-container p {
   margin: 0;
 }
+
 .log-in-container button {
   font-family: "Poppins";
   font-weight: 300;
@@ -92,15 +104,19 @@ html, body {
   background: linear-gradient(to right, #886AE2, #A284F6);
   padding: 10px;
 }
+
 /* main */
 .main-container {
   display: flex;
   flex-direction: column;
   align-items: center;
+  flex-grow: 1;
   width: 60%;
   background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
 }
-
+.hero-container {
+  padding: 25px;
+}
 .search-input {
   font-family: "DM Sans";
   font-size: 18px;
@@ -115,12 +131,15 @@ html, body {
   background-color: #352E38;
   color: #8A7BAA;
 }
-.search-input:focus{
+
+.search-input:focus {
   box-shadow: 0 0 10px rgb(255 255 255);
 }
+
 .songs {
-justify-content: center;
+  justify-content: center;
 }
+
 .song {
   font-family: "Poppins";
   display: flex;
@@ -132,15 +151,8 @@ justify-content: center;
   padding: 10px;
   color: white;
 }
+
 .audio-img {
   height: 50px;
-  border-radius: 50%
+  border-radius: 50%;
 }
-
-
-
-
-
-
-
-

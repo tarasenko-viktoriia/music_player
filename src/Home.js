@@ -25,28 +25,30 @@ export default function Home() {
                 </aside>
             </div>
             <main className="main-container">
-                <div>
-                    <input
-                        className="search-input"
-                        type="search"
-                        placeholder="Search..."
-                        value={search}
-                        onChange={(e) => setSearch(e.target.value)}>
-                    </input>
-                </div>
-                {song && <Player />}
-                <div >
-                    {isSongs ? (
-                        <div className="songs">
-                            {MusicList.filter(data =>
-                                data.title.toLowerCase().includes(search.toLowerCase())
-                            ).map((item) => (
-                                <Song key={item.id} {...item} />
-                            ))}
-                        </div>
-                    ) : (
-                        <Playlist search={search} />
-                    )}
+                <div className="hero-container">
+                    <div>
+                        <input
+                            className="search-input"
+                            type="search"
+                            placeholder="Search..."
+                            value={search}
+                            onChange={(e) => setSearch(e.target.value)}>
+                        </input>
+                    </div>
+                    {song && <Player />}
+                    <div >
+                        {isSongs ? (
+                            <div className="songs">
+                                {MusicList.filter(data =>
+                                    data.title.toLowerCase().includes(search.toLowerCase())
+                                ).map((item) => (
+                                    <Song key={item.id} {...item} />
+                                ))}
+                            </div>
+                        ) : (
+                            <Playlist search={search} />
+                        )}
+                    </div>
                 </div>
             </main>
             <div className="sidebar-wrapper-right">
