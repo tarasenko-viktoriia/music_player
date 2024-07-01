@@ -26,7 +26,7 @@ export default function Home() {
             </div>
             <main className="main-container">
                 <div className="hero-container">
-                    <div>
+                    <div className="input-container">
                         <input
                             className="search-input"
                             type="search"
@@ -36,7 +36,6 @@ export default function Home() {
                         </input>
                     </div>
                     {song && <Player />}
-                    <div >
                         {isSongs ? (
                             <div className="songs">
                                 {MusicList.filter(data =>
@@ -48,7 +47,6 @@ export default function Home() {
                         ) : (
                             <Playlist search={search} />
                         )}
-                    </div>
                 </div>
             </main>
             <div className="sidebar-wrapper-right">

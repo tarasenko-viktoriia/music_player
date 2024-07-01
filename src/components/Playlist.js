@@ -29,11 +29,11 @@ export default function Playlist({ search }) {
                     </div>
                 </div>
             ) : (
-                <div>
+                <div className="playlist-container">
                     {PlayList.filter(playlist =>
                         playlist.title.toLowerCase().includes(search.toLowerCase())
                     ).map(playlist => (
-                        <div key={playlist.id} className="song" onClick={() => handlePlaylistClick(playlist)}>
+                        <div key={playlist.id} className="playlist-items" onClick={() => handlePlaylistClick(playlist)}>
                             <img className="audio-img" alt={playlist.title} src={playlist.imgUrl} />
                             <div>{playlist.title}</div>
                         </div>
