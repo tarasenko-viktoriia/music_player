@@ -6,6 +6,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Modal, Box, TextField, Button } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 
+const defaultPlaylistImage = '../image/default-img.jpg' // Replace with your default image URL
+
 export default function Playlist({ search }) {
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
@@ -34,8 +36,8 @@ export default function Playlist({ search }) {
         const newPlaylist = {
             id: playlists.length + 1,
             title: newPlaylistTitle,
-            imgUrl: newPlaylistImage,
-            songs: [] // Порожній масив пісень для нового плейлисту
+            imgUrl: newPlaylistImage || defaultPlaylistImage, // Use default image if no image is selected
+            songs: [] // Empty array for new playlist songs
         };
         dispatch(addPlaylist(newPlaylist));
         handleCloseModal();
@@ -60,7 +62,15 @@ export default function Playlist({ search }) {
                         {selectedPlaylist.songs
                             .filter(song => song.title.toLowerCase().includes(search.toLowerCase()))
                             .map(song => (
-                                <Song key={song.id} {...song} />
+                                <Song
+                                    key={song.id}
+                                    id={song.id}
+                                    title={song.title}
+                                    artist={song.artist}
+                                    artwork={song.artwork}
+                                    location="playlist"
+                                    playlistId={selectedPlaylist.id}
+                                />
                             ))}
                     </div>
                 </div>
@@ -75,7 +85,9 @@ export default function Playlist({ search }) {
                             <div>{playlist.title}</div>
                         </div>
                     ))}
-                    <button onClick={handleOpenModal}>+</button>
+                    <Button onClick={handleOpenModal} variant="contained" color="primary">
+                        Додати новий плейлист
+                    </Button>
                 </div>
             )}
             <Modal

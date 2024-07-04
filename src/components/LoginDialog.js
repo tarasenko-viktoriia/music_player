@@ -1,4 +1,3 @@
-// components/LoginDialog.js
 import React, { useState } from "react";
 import {
     Dialog,
