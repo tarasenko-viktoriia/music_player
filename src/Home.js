@@ -1,11 +1,13 @@
 import React, { useState } from "react";
-import Menu from "./components/Menu";
-import { MusicList, PlayList } from "./data";
+import {Router, Route, Switch, Link, Redirect} from 'react-router-dom';
+import createHistory from "history/createBrowserHistory";
 import { useSelector } from "react-redux";
+import Menu from "./components/Menu";
+import { MusicList} from "./data";
 import Song from "./components/Song";
 import Playlist from "./components/Playlist";
 import Player from "./components/Player";
-import Basic from "./components/Basic"
+import Basic from "./components/Basic";
 
 export default function Home() {
     const [isSongs, setIsSongs] = useState(true);
@@ -36,7 +38,6 @@ export default function Home() {
                             onChange={(e) => setSearch(e.target.value)}>
                         </input>
                     </div>
-                    {/* {song && <Player />} */}
                     {isSongs ? (
                         <div className="songs">
                             {MusicList.filter(data =>
@@ -64,3 +65,14 @@ export default function Home() {
     );
 }
 
+function App() {
+    return (
+        <Router history={createHistory()}>
+            <Switch>
+                <Route exact path="/" component={Home} />
+                <Route path="/playlist" component={Playlist} />
+                <Route path="/song/:id" component={Song} />
+            </Switch>
+        </Router>
+    );
+}
