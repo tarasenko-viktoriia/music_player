@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSong } from "../Redux/reducer/song";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -6,7 +6,8 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function Player() {
     const song = useSelector(state => state.song.value);
-    const list = useSelector(state => state.list.value)
+    const list = useSelector(state => state.list.value);
+    const audioRef = useRef(null);
 
     const dispatch = useDispatch();
 
@@ -17,10 +18,12 @@ export default function Player() {
     const isNext = () => index < list.length - 1 && list.length > 1;
 
     useEffect(() => {
-        const player = document.getElementById("audio");
+        const player = audioRef.current;
 
         const handleCanPlay = () => {
-            player.play();
+            player.play().catch(error => {
+                console.error('Error playing audio:', error);
+            });
         };
 
         player.addEventListener('canplay', handleCanPlay);
@@ -30,10 +33,20 @@ export default function Player() {
         };
     }, [song]);
 
-    const reloadMusic = () => {
-        const player = document.getElementById("audio");
-        player.load();
+    const changeAndPlaySong = (newSong) => {
+        const player = audioRef.current;
+
+        if (!player.paused) {
+            player.pause();
+        }
+
+        dispatch(changeSong(newSong));
     };
+
+    useEffect(() => {
+        const player = audioRef.current;
+        player.load();
+    }, [song]);
 
     return (
         <div className="player">
@@ -45,24 +58,22 @@ export default function Player() {
                 <div className="name">{song.title}</div>
                 <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
                     if (isPrev()) {
-                        dispatch(changeSong(list[index - 1]))
-                        reloadMusic();
+                        changeAndPlaySong(list[index - 1]);
                     }
                 }}>
                     <ArrowBackIosIcon />
                 </div>
-                <audio id="audio" controls>
+                <audio ref={audioRef} id="audio" controls>
                     <source src={song.url} type="audio/mpeg" />
                 </audio>
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
-                        dispatch(changeSong(list[index + 1]))
-                        reloadMusic();
+                        changeAndPlaySong(list[index + 1]);
                     }
                 }}>
                     <ArrowForwardIosIcon />
                 </div>
             </div>
         </div>
-    )
+    );
 }
