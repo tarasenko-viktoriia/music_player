@@ -21,6 +21,14 @@ export const list = createSlice({
                 (playlist) => playlist.id !== action.payload
             );
         },
+        changePlaylist: (state, action) => {
+            const { id, title, imgUrl } = action.payload;
+            const playlistToEdit = state.playlists.find(pl => pl.id === id);
+            if (playlistToEdit) {
+                playlistToEdit.title = title || playlistToEdit.title;
+                playlistToEdit.imgUrl = imgUrl || playlistToEdit.imgUrl;
+            }
+        },
         addSongToPlaylist: (state, action) => {
             const { playlistId, song } = action.payload;
             const playlist = state.playlists.find(pl => pl.id === playlistId);
@@ -38,6 +46,6 @@ export const list = createSlice({
     },
 });
 
-export const { changeList, addPlaylist, removePlaylist, addSongToPlaylist, removeSongFromPlaylist } = list.actions;
+export const { changeList, addPlaylist, removePlaylist, changePlaylist, addSongToPlaylist, removeSongFromPlaylist } = list.actions;
 
 export default list.reducer;
