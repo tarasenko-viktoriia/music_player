@@ -40,28 +40,20 @@ export default function Home() {
         setSignupOpen(false);
     };
 
-    const handleAddSongOpen = () => {
-        setAddSongOpen(true);
-    };
-
-    const handleAddSongClose = () => {
-        setAddSongOpen(false);
-    };
-
-    const handleAddSong = () => {
+    const handleAddSong = (newSongFile) => {
         if (newSongFile) {
             const newSong = {
-                id: songsList.length + 1, // Зазвичай потрібно генерувати унікальний ID
-                title: newSongTitle || newSongFile.name, // Використовуємо ім'я файлу, якщо не вказана власна назва
-                file: URL.createObjectURL(newSongFile), // Створюємо URL для файлу
+                id: songsList.length + 1,
+                title: newSongTitle || newSongFile.name,
+                file: URL.createObjectURL(newSongFile),
             };
-            dispatch(addSong(newSong)); // Додаємо пісню до Redux
-            dispatch(changeSong(newSong)); // Змінюємо поточну пісню для програвання
-            setAddSongOpen(false);
+            dispatch(addSong(newSong));
+            dispatch(changeSong(newSong));
             setNewSongTitle("");
             setNewSongFile(null);
         }
     };
+
     return (
         <div className="home">
             <div className="sidebar-wrapper-left">
@@ -86,16 +78,17 @@ export default function Home() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    <button onClick={handleAddSongOpen}>Додати пісню</button>
                     {isSongs ? (
                         <div className="songs">
-                            {songsList.filter((data) =>
-                                data.title.toLowerCase().includes(search.toLowerCase())
-                            ).map((item) => (
-                                <div key={item.id} onClick={() => dispatch(changeSong(item))}>
-                                    <Song {...item} />
-                                </div>
-                            ))}
+                            {songsList
+                                .filter(data =>
+                                    data.title.toLowerCase().includes(search.toLowerCase())
+                                )
+                                .map(item => (
+                                    <div key={item.id} onClick={() => dispatch(changeSong(item))}>
+                                        <Song {...item} />
+                                    </div>
+                                ))}
                         </div>
                     ) : (
                         <Playlist search={search} />
@@ -109,7 +102,9 @@ export default function Home() {
                         <button onClick={handleLoginOpen}>Log in</button>
                     </div>
                     {song && <Player />}
-                    <Basic />
+                    <div>
+                        <Basic onFilesSelected={handleAddSong} />
+                    </div>
                 </aside>
             </div>
             <LoginDialog
@@ -118,34 +113,6 @@ export default function Home() {
                 handleSignupOpen={handleSignupOpen}
             />
             <SignupDialog open={signupOpen} handleClose={handleSignupClose} />
-
-            <Dialog open={addSongOpen} onClose={handleAddSongClose}>
-                <DialogTitle>Додати нову пісню</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Назва пісні"
-                        type="text"
-                        fullWidth
-                        value={newSongTitle}
-                        onChange={(e) => setNewSongTitle(e.target.value)}
-                    />
-                    <input
-                        type="file"
-                        accept="audio/*"
-                        onChange={(e) => setNewSongFile(e.target.files[0])}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleAddSongClose} color="primary">
-                        Відміна
-                    </Button>
-                    <Button onClick={handleAddSong} color="primary">
-                        Додати
-                    </Button>
-                </DialogActions>
-            </Dialog>
         </div>
     );
 }
