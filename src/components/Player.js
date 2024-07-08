@@ -1,21 +1,21 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSong } from "../Redux/reducer/song";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 export default function Player() {
-    const song = useSelector(state => state.song.value);
-    const list = useSelector(state => state.list.value);
+    const currentSong = useSelector(state => state.song.currentSong);
+    const songsList = useSelector(state => state.song.songsList);
     const audioRef = useRef(null);
+    const [songTitle, setSongTitle] = useState("");
 
     const dispatch = useDispatch();
 
-    const index = list.findIndex((item) => item.id === song.id);
+    const index = songsList.findIndex((item) => item.id === currentSong?.id);
 
-    const isPrev = () => index > 0 && list.length > 1;
-
-    const isNext = () => index < list.length - 1 && list.length > 1;
+    const isPrev = () => index > 0 && songsList.length > 1;
+    const isNext = () => index < songsList.length - 1 && songsList.length > 1;
 
     useEffect(() => {
         const player = audioRef.current;
@@ -24,6 +24,7 @@ export default function Player() {
             player.play().catch(error => {
                 console.error('Error playing audio:', error);
             });
+            setSongTitle(currentSong?.title); // Оновлення назви пісні
         };
 
         player.addEventListener('canplay', handleCanPlay);
@@ -31,7 +32,7 @@ export default function Player() {
         return () => {
             player.removeEventListener('canplay', handleCanPlay);
         };
-    }, [song]);
+    }, [currentSong]);
 
     const changeAndPlaySong = (newSong) => {
         const player = audioRef.current;
@@ -46,29 +47,29 @@ export default function Player() {
     useEffect(() => {
         const player = audioRef.current;
         player.load();
-    }, [song]);
+    }, [currentSong]);
 
     return (
         <div className="player">
             <div>
-                <img src={song.artwork} alt={song.title}
+                <img src={currentSong?.artwork} alt={currentSong?.title}
                     height="50"
                     width="50"
                     style={{ borderRadius: "15px", marginRight: 10 }} />
-                <div className="name">{song.title}</div>
+                <div className="name">{songTitle}</div> {/* Відображення назви пісні */}
                 <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
                     if (isPrev()) {
-                        changeAndPlaySong(list[index - 1]);
+                        changeAndPlaySong(songsList[index - 1]);
                     }
                 }}>
                     <ArrowBackIosIcon />
                 </div>
                 <audio ref={audioRef} id="audio" controls>
-                    <source src={song.url} type="audio/mpeg" />
+                    <source src={currentSong?.file} type="audio/mpeg" />
                 </audio>
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
-                        changeAndPlaySong(list[index + 1]);
+                        changeAndPlaySong(songsList[index + 1]);
                     }
                 }}>
                     <ArrowForwardIosIcon />

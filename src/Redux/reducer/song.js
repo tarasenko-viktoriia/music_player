@@ -1,20 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-
 const initialState = {
-    value: null,
+    currentSong: null,
+    songsList: [],
 };
 
-const list = createSlice({
+const songSlice = createSlice({
     name: "song",
     initialState,
     reducers: {
         changeSong: (state, action) => {
-            state.value = action.payload
-        }
-    }
+            state.currentSong = action.payload;
+        },
+        addSong: (state, action) => {
+            state.songsList.push(action.payload);
+        },
+    },
 });
 
-export const {changeSong} = list.actions;
+export const { changeSong, addSong } = songSlice.actions;
 
-export default list.reducer;
+export default songSlice.reducer;

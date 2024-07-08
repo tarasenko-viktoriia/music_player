@@ -88,7 +88,7 @@ export default function Song(props) {
             })
         }}>
             <div className="song-container">
-                <img className="audio-img" alt={props.title} src={props.artwork} />
+                {/* <img className="audio-img" alt={props.title} src={props.artwork} /> */}
                 <div className="name-song-container">
                     <div className="song-title">{props.title}</div>
                     <div className="song-artist">{props.artist}</div>
