@@ -1,18 +1,20 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeList, addPlaylist, removePlaylist } from "../Redux/reducer/list";
+import { changeList, addPlaylist, removePlaylist, changePlaylist } from "../Redux/reducer/list";
 import Song from "./Song";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import { Modal, Box, TextField, Button } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Modal, Box, TextField, Button, Menu, MenuItem } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-const defaultPlaylistImage = '../image/default-img.jpg' // Replace with your default image URL
+const defaultPlaylistImage = '../image/default-img.jpg'; // Replace with your default image URL
 
 export default function Playlist({ search }) {
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [newPlaylistTitle, setNewPlaylistTitle] = useState('');
     const [newPlaylistImage, setNewPlaylistImage] = useState(null);
+    const [editingPlaylistId, setEditingPlaylistId] = useState(null);
+    const [anchorEl, setAnchorEl] = useState(null);
     const list = useSelector(state => state.list.value);
     const playlists = useSelector(state => state.list.playlists);
     const dispatch = useDispatch();
@@ -30,16 +32,25 @@ export default function Playlist({ search }) {
         setModalOpen(false);
         setNewPlaylistTitle('');
         setNewPlaylistImage(null);
+        setEditingPlaylistId(null);
     };
 
-    const handleAddPlaylist = () => {
-        const newPlaylist = {
-            id: playlists.length + 1,
-            title: newPlaylistTitle,
-            imgUrl: newPlaylistImage || defaultPlaylistImage, // Use default image if no image is selected
-            songs: [] // Empty array for new playlist songs
-        };
-        dispatch(addPlaylist(newPlaylist));
+    const handleSavePlaylist = () => {
+        if (editingPlaylistId !== null) {
+            dispatch(changePlaylist({
+                id: editingPlaylistId,
+                title: newPlaylistTitle,
+                imgUrl: newPlaylistImage || defaultPlaylistImage
+            }));
+        } else {
+            const newPlaylist = {
+                id: playlists.length + 1,
+                title: newPlaylistTitle,
+                imgUrl: newPlaylistImage || defaultPlaylistImage,
+                songs: []
+            };
+            dispatch(addPlaylist(newPlaylist));
+        }
         handleCloseModal();
     };
 
@@ -51,6 +62,22 @@ export default function Playlist({ search }) {
 
     const handleRemovePlaylist = (id) => {
         dispatch(removePlaylist(id));
+    };
+
+    const handleEditPlaylist = (playlist) => {
+        setNewPlaylistTitle(playlist.title);
+        setNewPlaylistImage(playlist.imgUrl);
+        setEditingPlaylistId(playlist.id);
+        setModalOpen(true);
+        setAnchorEl(null);
+    };
+
+    const handleMenuClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+        setAnchorEl(null);
     };
 
     return (
@@ -80,7 +107,22 @@ export default function Playlist({ search }) {
                         playlist.title.toLowerCase().includes(search.toLowerCase())
                     ).map(playlist => (
                         <div key={playlist.id} className="playlist-items">
-                            <CloseIcon onClick={() => handleRemovePlaylist(playlist.id)} />
+                            <Button aria-controls="playlist-menu" aria-haspopup="true" onClick={handleMenuClick}>
+                                <MoreVertIcon />
+                            </Button>
+                            <Menu
+                                id="playlist-menu"
+                                anchorEl={anchorEl}
+                                open={Boolean(anchorEl)}
+                                onClose={handleMenuClose}
+                            >
+                                <MenuItem onClick={() => handleEditPlaylist(playlist)}>
+                                    Змінити назву та зображення
+                                </MenuItem>
+                                <MenuItem onClick={() => handleRemovePlaylist(playlist.id)}>
+                                    Видалити плейлист
+                                </MenuItem>
+                            </Menu>
                             <img className="audio-img" alt={playlist.title} src={playlist.imgUrl} onClick={() => handlePlaylistClick(playlist)} />
                             <div>{playlist.title}</div>
                         </div>
@@ -109,7 +151,7 @@ export default function Playlist({ search }) {
                         p: 4,
                     }}
                 >
-                    <h2 id="simple-modal-title">Новий плейлист</h2>
+                    <h2 id="simple-modal-title">{editingPlaylistId !== null ? 'Редагувати плейлист' : 'Новий плейлист'}</h2>
                     <TextField
                         fullWidth
                         label="Назва плейлисту"
@@ -131,8 +173,8 @@ export default function Playlist({ search }) {
                     {newPlaylistImage && (
                         <img src={newPlaylistImage} alt="Playlist" style={{ marginTop: '10px', width: '100%' }} />
                     )}
-                    <Button onClick={handleAddPlaylist} variant="contained" color="primary" sx={{ mt: 2 }}>
-                        Додати
+                    <Button onClick={handleSavePlaylist} variant="contained" color="primary" sx={{ mt: 2 }}>
+                        {editingPlaylistId !== null ? 'Зберегти зміни' : 'Додати'}
                     </Button>
                 </Box>
             </Modal>

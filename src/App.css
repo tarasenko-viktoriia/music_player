@@ -180,11 +180,13 @@ html, body {
   color: white;
   background-color: #352E38;
   border-radius: 20px;
-  width: 100px;
-  height: 100px;
+  width: 150px;
+  height: 150px;
   cursor: pointer;
 }
-
+.playlist-items .audio-img  {
+  height: 75px;
+}
 /* Player */
 .player {
   background-color: #9f8ba783;

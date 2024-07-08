@@ -77,8 +77,8 @@ export default function Home() {
                     <div className="log-in-container">
                         <p>To use all Bits functions, login into your account</p>
                         <button onClick={handleLoginOpen}>Log in</button>
-                        {song && <Player />}
                     </div>
+                    {song && <Player />}
                     <Basic />
                 </aside>
             </div>
