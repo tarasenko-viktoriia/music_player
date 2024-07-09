@@ -6,6 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 import { addPlaylist } from "../Redux/reducer/list";
+import { removeSong } from "../Redux/reducer/song"; // Імпортуйте новий діспетчер
 
 const defaultPlaylistImage = '../image/default-img.jpg'; // Замініть на URL вашого зображення за замовчуванням
 
@@ -48,14 +49,23 @@ export default function Song(props) {
         setOpen(false);
     };
 
-    const handleRemoveSong = (e) => {
-        e.stopPropagation();
-        playlists.forEach(playlist => {
-            const songIndex = playlist.songs.findIndex(song => song.id === props.id);
-            if (songIndex !== -1) {
-                dispatch(removeSongFromPlaylist({ playlistId: playlist.id, songId: props.id }));
-            }
-        });
+    const handleRemoveSong = () => {
+        const isInPlaylist = playlists.some(playlist =>
+            playlist.songs.some(song => song.id === props.id)
+        );
+    
+        if (!isInPlaylist) {
+            // Якщо пісня не знаходиться в жодному плейлисті, видаліть її зі загального списку пісень
+            dispatch(removeSong(props.id)); // Припущено, що у вас є дія removeSong у reducer/song.js
+        } else {
+            // Якщо пісня є в якомусь плейлисті, видаліть її тільки з поточного плейлисту
+            playlists.forEach(playlist => {
+                const songIndex = playlist.songs.findIndex(song => song.id === props.id);
+                if (songIndex !== -1) {
+                    dispatch(removeSongFromPlaylist({ playlistId: playlist.id, songId: props.id }));
+                }
+            });
+        }
     };
 
     const handleAddNewPlaylist = () => {

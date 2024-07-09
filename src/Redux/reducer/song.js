@@ -15,9 +15,13 @@ const songSlice = createSlice({
         addSong: (state, action) => {
             state.songsList.push(action.payload);
         },
+        removeSong(state, action) {
+            // Видалення пісні з бібліотеки за ідентифікатором
+            state.songsList = state.songsList.filter(song => song.id !== action.payload);
+          },
     },
 });
 
-export const { changeSong, addSong } = songSlice.actions;
+export const { changeSong, addSong, removeSong } = songSlice.actions;
 
 export default songSlice.reducer;
