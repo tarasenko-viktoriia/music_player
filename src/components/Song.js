@@ -7,11 +7,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 import { addPlaylist } from "../Redux/reducer/list";
 
-const defaultPlaylistImage = '../image/default-img.jpg' // Replace with your default image URL
+const defaultPlaylistImage = '../image/default-img.jpg'; // Замініть на URL вашого зображення за замовчуванням
 
 export default function Song(props) {
     const song = useSelector(state => state.song.value);
-    const playlists = useSelector(state => state.list.playlists); // Assuming you have playlists in the state
+    const playlists = useSelector(state => state.list.playlists); // Припускаючи, що ви маєте плейлисти в стані Redux
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -27,19 +27,19 @@ export default function Song(props) {
 
     const handleDialogClose = () => {
         setOpen(false);
-        setNewPlaylistOpen(false); // Close new playlist dialog if open
-        setNewPlaylistTitle(""); // Reset new playlist title
-        setNewPlaylistImage(null); // Reset new playlist image
+        setNewPlaylistOpen(false); // Закрити діалог створення нового плейлисту, якщо він відкритий
+        setNewPlaylistTitle(""); // Скидання назви нового плейлисту
+        setNewPlaylistImage(null); // Скидання зображення нового плейлисту
     };
 
     const handlePlaylistChange = (e) => {
         const selected = e.target.value;
         setSelectedPlaylist(selected);
 
-        // If "new" is selected, open new playlist dialog
+        // Якщо вибрано "new", відкрийте діалог створення нового плейлисту
         if (selected === "new") {
             setNewPlaylistOpen(true);
-            setNewPlaylistImage(defaultPlaylistImage); // Set default image when opening new playlist dialog
+            setNewPlaylistImage(defaultPlaylistImage); // Встановлення зображення за замовчуванням при відкритті діалогу створення нового плейлисту
         }
     };
 
@@ -62,11 +62,11 @@ export default function Song(props) {
         const newPlaylist = {
             id: playlists.length + 1,
             title: newPlaylistTitle,
-            imgUrl: newPlaylistImage || defaultPlaylistImage, // Use default image if no image is selected
-            songs: [] // Empty array for new playlist songs
+            imgUrl: newPlaylistImage || defaultPlaylistImage, // Використання зображення за замовчуванням, якщо не вибрано зображення
+            songs: [] // Порожній масив для пісень нового плейлисту
         };
         dispatch(addPlaylist(newPlaylist));
-        setSelectedPlaylist(newPlaylist.id); // Select newly created playlist
+        setSelectedPlaylist(newPlaylist.id); // Вибрати новостворений плейлист
         setNewPlaylistOpen(false);
     };
 
@@ -76,19 +76,16 @@ export default function Song(props) {
         }
     };
 
+    const handleChangeSong = () => {
+        dispatch(changeSong(props)); // Змінюємо поточну пісню
+        const player = document.getElementById("audio");
+        player.load(); // Завантажуємо пісню
+        player.play(); // Відтворюємо пісню
+    };
+
     return (
-        <div className="song" onClick={() => {
-            dispatch(changeSong(props));
-            setTimeout(() => {
-                if (song?.id !== props.id) {
-                    const player = document.getElementById("audio");
-                    player.load();
-                    player.play();
-                }
-            })
-        }}>
+        <div className="song" onClick={handleChangeSong}>
             <div className="song-container">
-                {/* <img className="audio-img" alt={props.title} src={props.artwork} /> */}
                 <div className="name-song-container">
                     <div className="song-title">{props.title}</div>
                     <div className="song-artist">{props.artist}</div>

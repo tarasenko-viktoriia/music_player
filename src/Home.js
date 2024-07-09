@@ -48,7 +48,7 @@ export default function Home() {
                 file: URL.createObjectURL(newSongFile),
             };
             dispatch(addSong(newSong));
-            dispatch(changeSong(newSong));
+            dispatch(changeSong(newSong, false)); // Забезпечуємо, що відтворення не почнеться автоматично
             setNewSongTitle("");
             setNewSongFile(null);
         }
@@ -85,7 +85,7 @@ export default function Home() {
                                     data.title.toLowerCase().includes(search.toLowerCase())
                                 )
                                 .map(item => (
-                                    <div key={item.id} onClick={() => dispatch(changeSong(item))}>
+                                    <div key={item.id} onClick={() => dispatch(changeSong(item, false))}>
                                         <Song {...item} />
                                     </div>
                                 ))}
@@ -114,17 +114,5 @@ export default function Home() {
             />
             <SignupDialog open={signupOpen} handleClose={handleSignupClose} />
         </div>
-    );
-}
-
-function App() {
-    return (
-        <Router history={createHistory()}>
-            <Switch>
-                <Route exact path="/" component={Home} />
-                <Route path="/playlist" component={Playlist} />
-                <Route path="/song/:id" component={Song} />
-            </Switch>
-        </Router>
     );
 }

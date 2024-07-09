@@ -41,8 +41,9 @@ export const list = createSlice({
             const playlist = state.playlists.find(pl => pl.id === playlistId);
             if (playlist) {
                 playlist.songs = playlist.songs.filter(s => s.id !== songId);
+                state.playlists = [...state.playlists]; // оновлюємо стан плейлистів
             }
-        }
+        }        
     },
 });
 

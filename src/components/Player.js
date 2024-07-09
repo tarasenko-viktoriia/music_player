@@ -21,10 +21,7 @@ export default function Player() {
         const player = audioRef.current;
 
         const handleCanPlay = () => {
-            player.play().catch(error => {
-                console.error('Error playing audio:', error);
-            });
-            setSongTitle(currentSong?.title); // Оновлення назви пісні
+            setSongTitle(currentSong?.title); // Оновлення назви пісні після завантаження
         };
 
         player.addEventListener('canplay', handleCanPlay);
@@ -37,17 +34,17 @@ export default function Player() {
     const changeAndPlaySong = (newSong) => {
         const player = audioRef.current;
 
-        if (!player.paused) {
-            player.pause();
-        }
-
         dispatch(changeSong(newSong));
-    };
 
-    useEffect(() => {
-        const player = audioRef.current;
-        player.load();
-    }, [currentSong]);
+        // Відтворення пісні після зміни
+        setTimeout(() => {
+            if (!player.paused) {
+                player.pause();
+            }
+            player.load();
+            player.play();
+        }, 100); // Додатковий інтервал для впевненості, що плеєр готовий до відтворення
+    };
 
     return (
         <div className="player">
