@@ -19,11 +19,12 @@ const songSlice = createSlice({
             state.songsList = state.songsList.filter(song => song.id !== action.payload);
         },
         updateSongDetails: (state, action) => {
-            const { id, title, artist } = action.payload;
+            const { id, title, artist, image} = action.payload;
             const song = state.songsList.find(song => song.id === id);
             if (song) {
                 song.title = title;
                 song.artist = artist;
+                song.image = image;
             }
         }
     },
