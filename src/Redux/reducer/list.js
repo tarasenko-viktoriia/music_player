@@ -1,4 +1,3 @@
-// list.js
 import { createSlice } from "@reduxjs/toolkit";
 import { MusicList, PlayList } from "../../data";
 
