@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSong, removeSong } from "../Redux/reducer/song";
+import { changeSong, removeSong, updateSongDetails } from "../Redux/reducer/song";
 import { addSongToPlaylist, removeSongFromPlaylist, removeSongFromAllPlaylists } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
+import EditIcon from '@mui/icons-material/Edit';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 import { addPlaylist } from "../Redux/reducer/list";
 
@@ -15,10 +16,13 @@ export default function Song(props) {
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
+    const [editOpen, setEditOpen] = useState(false);
     const [selectedPlaylist, setSelectedPlaylist] = useState("");
     const [newPlaylistOpen, setNewPlaylistOpen] = useState(false);
     const [newPlaylistTitle, setNewPlaylistTitle] = useState("");
     const [newPlaylistImage, setNewPlaylistImage] = useState(null);
+    const [editedTitle, setEditedTitle] = useState(props.title);
+    const [editedArtist, setEditedArtist] = useState(props.artist);
 
     const handleAddSong = (e) => {
         e.stopPropagation();
@@ -30,6 +34,7 @@ export default function Song(props) {
         setNewPlaylistOpen(false);
         setNewPlaylistTitle("");
         setNewPlaylistImage(null);
+        setEditOpen(false);
     };
 
     const handlePlaylistChange = (e) => {
@@ -78,6 +83,16 @@ export default function Song(props) {
         player.play();
     };
 
+    const handleEditSong = (e) => {
+        e.stopPropagation();
+        setEditOpen(true);
+    };
+
+    const handleSaveEditedSong = () => {
+        dispatch(updateSongDetails({ id: props.id, title: editedTitle, artist: editedArtist }));
+        setEditOpen(false);
+    };
+
     return (
         <div className="song" onClick={handleChangeSong}>
             <div className="song-container">
@@ -86,6 +101,7 @@ export default function Song(props) {
                     <div className="song-artist">{props.artist}</div>
                 </div>
                 <AddIcon onClick={handleAddSong} />
+                <EditIcon onClick={handleEditSong} />
                 <CloseIcon onClick={handleRemoveSong} />
             </div>
 
@@ -142,6 +158,31 @@ export default function Song(props) {
                     <Button onClick={handleDialogClose}>Скасувати</Button>
                     <Button onClick={handleAddNewPlaylist} variant="contained" color="primary" disabled={!newPlaylistTitle}>
                         Додати
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={editOpen} onClose={handleDialogClose}>
+                <DialogTitle>Редагувати пісню</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        fullWidth
+                        label="Назва пісні"
+                        value={editedTitle}
+                        onChange={(e) => setEditedTitle(e.target.value)}
+                        sx={{ mb: 2 }}
+                    />
+                    <TextField
+                        fullWidth
+                        label="Виконавець"
+                        value={editedArtist}
+                        onChange={(e) => setEditedArtist(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleDialogClose}>Скасувати</Button>
+                    <Button onClick={handleSaveEditedSong} variant="contained" color="primary" disabled={!editedTitle || !editedArtist}>
+                        Зберегти
                     </Button>
                 </DialogActions>
             </Dialog>
