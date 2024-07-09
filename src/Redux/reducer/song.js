@@ -16,7 +16,6 @@ const songSlice = createSlice({
             state.songsList.push(action.payload);
         },
         removeSong(state, action) {
-            // Видалення пісні з бібліотеки за ідентифікатором
             state.songsList = state.songsList.filter(song => song.id !== action.payload);
           },
     },

@@ -1,18 +1,17 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSong } from "../Redux/reducer/song";
-import { addSongToPlaylist, removeSongFromPlaylist } from "../Redux/reducer/list";
+import { changeSong, removeSong } from "../Redux/reducer/song";
+import { addSongToPlaylist, removeSongFromPlaylist, removeSongFromAllPlaylists } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 import { addPlaylist } from "../Redux/reducer/list";
-import { removeSong } from "../Redux/reducer/song"; // Імпортуйте новий діспетчер
 
-const defaultPlaylistImage = '../image/default-img.jpg'; // Замініть на URL вашого зображення за замовчуванням
+const defaultPlaylistImage = '../image/default-img.jpg';
 
 export default function Song(props) {
     const song = useSelector(state => state.song.value);
-    const playlists = useSelector(state => state.list.playlists); // Припускаючи, що ви маєте плейлисти в стані Redux
+    const playlists = useSelector(state => state.list.playlists);
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -28,19 +27,18 @@ export default function Song(props) {
 
     const handleDialogClose = () => {
         setOpen(false);
-        setNewPlaylistOpen(false); // Закрити діалог створення нового плейлисту, якщо він відкритий
-        setNewPlaylistTitle(""); // Скидання назви нового плейлисту
-        setNewPlaylistImage(null); // Скидання зображення нового плейлисту
+        setNewPlaylistOpen(false);
+        setNewPlaylistTitle("");
+        setNewPlaylistImage(null);
     };
 
     const handlePlaylistChange = (e) => {
         const selected = e.target.value;
         setSelectedPlaylist(selected);
 
-        // Якщо вибрано "new", відкрийте діалог створення нового плейлисту
         if (selected === "new") {
             setNewPlaylistOpen(true);
-            setNewPlaylistImage(defaultPlaylistImage); // Встановлення зображення за замовчуванням при відкритті діалогу створення нового плейлисту
+            setNewPlaylistImage(defaultPlaylistImage);
         }
     };
 
@@ -49,34 +47,21 @@ export default function Song(props) {
         setOpen(false);
     };
 
-    const handleRemoveSong = () => {
-        const isInPlaylist = playlists.some(playlist =>
-            playlist.songs.some(song => song.id === props.id)
-        );
-    
-        if (!isInPlaylist) {
-            // Якщо пісня не знаходиться в жодному плейлисті, видаліть її зі загального списку пісень
-            dispatch(removeSong(props.id)); // Припущено, що у вас є дія removeSong у reducer/song.js
-        } else {
-            // Якщо пісня є в якомусь плейлисті, видаліть її тільки з поточного плейлисту
-            playlists.forEach(playlist => {
-                const songIndex = playlist.songs.findIndex(song => song.id === props.id);
-                if (songIndex !== -1) {
-                    dispatch(removeSongFromPlaylist({ playlistId: playlist.id, songId: props.id }));
-                }
-            });
-        }
+    const handleRemoveSong = (e) => {
+        e.stopPropagation();
+        dispatch(removeSong(props.id));
+        dispatch(removeSongFromAllPlaylists(props.id));
     };
 
     const handleAddNewPlaylist = () => {
         const newPlaylist = {
             id: playlists.length + 1,
             title: newPlaylistTitle,
-            imgUrl: newPlaylistImage || defaultPlaylistImage, // Використання зображення за замовчуванням, якщо не вибрано зображення
-            songs: [] // Порожній масив для пісень нового плейлисту
+            imgUrl: newPlaylistImage || defaultPlaylistImage,
+            songs: []
         };
         dispatch(addPlaylist(newPlaylist));
-        setSelectedPlaylist(newPlaylist.id); // Вибрати новостворений плейлист
+        setSelectedPlaylist(newPlaylist.id);
         setNewPlaylistOpen(false);
     };
 
@@ -87,10 +72,10 @@ export default function Song(props) {
     };
 
     const handleChangeSong = () => {
-        dispatch(changeSong(props)); // Змінюємо поточну пісню
+        dispatch(changeSong(props));
         const player = document.getElementById("audio");
-        player.load(); // Завантажуємо пісню
-        player.play(); // Відтворюємо пісню
+        player.load();
+        player.play();
     };
 
     return (

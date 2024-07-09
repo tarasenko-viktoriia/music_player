@@ -1,12 +1,13 @@
+// list.js
 import { createSlice } from "@reduxjs/toolkit";
 import { MusicList, PlayList } from "../../data";
 
 const initialState = {
     value: MusicList,
-    playlists: PlayList, // Додали початковий стан для плейлистів
+    playlists: PlayList,
 };
 
-export const list = createSlice({
+const listSlice = createSlice({
     name: "list",
     initialState,
     reducers: {
@@ -41,12 +42,26 @@ export const list = createSlice({
             const playlist = state.playlists.find(pl => pl.id === playlistId);
             if (playlist) {
                 playlist.songs = playlist.songs.filter(s => s.id !== songId);
-                state.playlists = [...state.playlists]; // оновлюємо стан плейлистів
+                state.playlists = [...state.playlists];
             }
-        }        
+        },
+        removeSongFromAllPlaylists: (state, action) => {
+            const songId = action.payload;
+            state.playlists.forEach(playlist => {
+                playlist.songs = playlist.songs.filter(song => song.id !== songId);
+            });
+        }
     },
 });
 
-export const { changeList, addPlaylist, removePlaylist, changePlaylist, addSongToPlaylist, removeSongFromPlaylist } = list.actions;
+export const {
+    changeList,
+    addPlaylist,
+    removePlaylist,
+    changePlaylist,
+    addSongToPlaylist,
+    removeSongFromPlaylist,
+    removeSongFromAllPlaylists
+} = listSlice.actions;
 
-export default list.reducer;
+export default listSlice.reducer;
