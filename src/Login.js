@@ -1,6 +1,6 @@
 import React, {useState, useEffect,useRef} from 'react';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
-import {Provider, useSelector, useDispatch}         from 'react-redux';
+import {Provider, useSelector, useDispatch} from 'react-redux';
 import {Router, Route, Link, Redirect, useParams, Switch} from 'react-router-dom';
 import createHistory from "history/createBrowserHistory";
 import { createApi } from '@reduxjs/toolkit/query/react'
@@ -27,12 +27,16 @@ function jwtDecode(token){
 
 
 
+
 const ShowLogin = () => {
-  const login = useSelector(state => state.auth.payload?.sub.login)
-  return (
-    <span> Hi, {login || 'Anon'}</span>
-  )
-}
+    const login = useSelector(state => state.auth.payload?.sub.login);
+    const nick = useSelector(state => state.auth.payload?.sub.nick);
+  
+    return (
+      <span> Hi, {nick || login || 'Anon'}</span>
+    );
+  };
+  
 
 const Logout = () => {
   const dispatch = useDispatch()
@@ -212,10 +216,6 @@ const PageMain = () =>
   <ChangeNick/>
 </>
 
-const PageAbout = () => 
-<>
-  <h1>О нас</h1>
-</>
 
 
 const PageLogin = () => {
@@ -248,7 +248,6 @@ function App(){
             <div>
             <Switch>
               <Route path="/" component={PageMain} exact />
-              <Route path="/about" component={PageAbout} />
               <Route path="/login" component={PageLogin} />   
             </Switch>
             </div>      
