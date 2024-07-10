@@ -11,6 +11,7 @@ import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
+import Login from "./Login"
 
 export default function Home() {
     const [isSongs, setIsSongs] = useState(true);
@@ -98,8 +99,9 @@ export default function Home() {
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
                     <div className="log-in-container">
-                        <p>To use all Bits functions, login into your account</p>
-                        <button onClick={handleLoginOpen}>Log in</button>
+                        <Login/>
+                        {/* <p>To use all Bits functions, login into your account</p>
+                        <button onClick={handleLoginOpen}>Log in</button> */}
                     </div>
                     {song && <Player />}
                     <div>
