@@ -1,5 +1,6 @@
+// listSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { MusicList, PlayList } from "../../data";
+import { MusicList, PlayList } from "../../data"; // Припустимо, що це ваші початкові дані
 
 const initialState = {
     value: MusicList,
@@ -17,9 +18,8 @@ const listSlice = createSlice({
             state.playlists.push(action.payload);
         },
         removePlaylist: (state, action) => {
-            state.playlists = state.playlists.filter(
-                (playlist) => playlist.id !== action.payload
-            );
+            const playlistId = action.payload;
+            state.playlists = state.playlists.filter(playlist => playlist.id !== playlistId);
         },
         changePlaylist: (state, action) => {
             const { id, title, imgUrl } = action.payload;
@@ -41,15 +41,24 @@ const listSlice = createSlice({
             const playlist = state.playlists.find(pl => pl.id === playlistId);
             if (playlist) {
                 playlist.songs = playlist.songs.filter(s => s.id !== songId);
-                state.playlists = [...state.playlists];
             }
         },
         removeSongFromAllPlaylists: (state, action) => {
             const songId = action.payload;
-            state.playlists.forEach(playlist => {
-                playlist.songs = playlist.songs.filter(song => song.id !== songId);
-            });
-        }
+            const songInLibrary = state.value.find(song => song.id === songId);
+            if (songInLibrary) {
+                // Якщо пісня є в загальній бібліотеці, видаляємо її з плейлистів
+                state.playlists.forEach(playlist => {
+                    playlist.songs = playlist.songs.filter(song => song.id !== songId);
+                });
+            } else {
+                // Якщо пісня не є в загальній бібліотеці, видаляємо її зі загальної бібліотеки
+                state.value = state.value.filter(song => song.id !== songId);
+                state.playlists.forEach(playlist => {
+                    playlist.songs = playlist.songs.filter(song => song.id !== songId);
+                });
+            }
+        },
     },
 });
 

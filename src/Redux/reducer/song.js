@@ -1,3 +1,4 @@
+// songSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -7,7 +8,7 @@ const initialState = {
 
 const songSlice = createSlice({
     name: "song",
-    initialState ,
+    initialState,
     reducers: {
         changeSong: (state, action) => {
             state.currentSong = action.payload;
@@ -16,10 +17,11 @@ const songSlice = createSlice({
             state.songsList.push(action.payload);
         },
         removeSong(state, action) {
-            state.songsList = state.songsList.filter(song => song.id !== action.payload);
+            const songId = action.payload;
+            state.songsList = state.songsList.filter(song => song.id !== songId);
         },
         updateSongDetails: (state, action) => {
-            const { id, title, artist, image} = action.payload;
+            const { id, title, artist, image } = action.payload;
             const song = state.songsList.find(song => song.id === id);
             if (song) {
                 song.title = title;

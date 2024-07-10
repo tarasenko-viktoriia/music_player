@@ -10,8 +10,9 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Se
 const defaultPlaylistImage = '../image/default-img.jpg';
 
 export default function Song(props) {
-    const song = useSelector(state => state.song.value);
+    const song = useSelector(state => state.song.currentSong);
     const playlists = useSelector(state => state.list.playlists);
+    const songsList = useSelector(state => state.list.value);
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -22,11 +23,13 @@ export default function Song(props) {
     const [newPlaylistImage, setNewPlaylistImage] = useState(null);
     const [editedTitle, setEditedTitle] = useState(props.title);
     const [editedArtist, setEditedArtist] = useState(props.artist);
-    const [editedImage, setEditedImage] = useState(null); 
+    const [editedImage, setEditedImage] = useState(null);
 
     useEffect(() => {
-        console.log("props.image:", props.image);
-    }, [props.image]);
+        setEditedTitle(props.title);
+        setEditedArtist(props.artist);
+        setEditedImage(props.image);
+    }, [props.title, props.artist, props.image]);
 
     const handleAddSong = (e) => {
         e.stopPropagation();
