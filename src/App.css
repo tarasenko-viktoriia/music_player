@@ -155,7 +155,7 @@ html, body {
   font-family: "Poppins";
   margin: 10px 0;
   cursor: pointer;
-  background-color: #352E38;
+  background-color: transparent;
   border-radius: 30px;
   padding: 10px;
   color: white;
@@ -210,4 +210,68 @@ html, body {
 .song-container {
   display: flex;
   gap: 15px
+}
+
+
+
+
+
+.song {
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0px 0px 6px 0px rgba(255, 255, 255, 0.3);
+  transition: transform 0.2s ease-in-out;
+}
+
+.song:hover {
+  transform: scale(1.02); 
+}
+
+.song-container {
+  display: flex;
+  align-items: center;
+}
+
+.name-song-container {
+  display: flex;
+  align-items: center;
+}
+
+.song-info {
+  margin-left: 10px;
+}
+
+.song-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+.song-artist {
+  font-size: 1rem;
+  color: #666;
+}
+
+.song img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.song.playing {
+  background: linear-gradient(135deg, rgba(130, 107, 158, 0.5) 0%, rgba(130, 107, 158, 0.5) 20%, rgba(46, 38, 56, 0.712) 80%, rgba(46, 38, 56, 0.712) 100%);
+  border: none;
+  box-shadow: 0px 0px 10px 3px rgba(255, 255, 255, 0.3);
+}
+
+.dialog-container {
+  padding: 20px;
+}
+
+.dialog-container img {
+  max-width: 100%;
+  margin-top: 10px;
 }

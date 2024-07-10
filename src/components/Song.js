@@ -31,6 +31,9 @@ export default function Song(props) {
         setEditedImage(props.image);
     }, [props.title, props.artist, props.image]);
 
+    // Check if this song is the current playing song
+    const isCurrentlyPlaying = song && song.id === props.id;
+
     const handleAddSong = (e) => {
         e.stopPropagation();
         setOpen(true);
@@ -107,7 +110,7 @@ export default function Song(props) {
     };
 
     return (
-        <div className="song" onClick={handleChangeSong}>
+        <div className={`song ${isCurrentlyPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
                 <div className="name-song-container">
                     <img src={props.image} alt={props.title}/>
