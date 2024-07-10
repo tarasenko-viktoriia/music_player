@@ -25,9 +25,6 @@ function jwtDecode(token){
   catch(e){} 
 }
 
-
-
-
 const ShowLogin = () => {
     const login = useSelector(state => state.auth.payload?.sub.login);
     const nick = useSelector(state => state.auth.payload?.sub.nick);
@@ -36,7 +33,6 @@ const ShowLogin = () => {
       <span> Hi, {nick || login || 'Anon'}</span>
     );
   };
-  
 
 const Logout = () => {
   const dispatch = useDispatch()
@@ -46,8 +42,6 @@ const Logout = () => {
             disabled={!isLoggedIn}>Logout</button>
   )
 }
-
-
 
 const authSlice = createSlice({
   name: 'auth',
@@ -155,7 +149,6 @@ const actionAboutMe = () =>
         }
     }
 
-
 const ShowNick = () => {
   const {isLoading, data} = useGetUserByIdQuery({_id: '668e258eca40d81010702e0d'})
   if (isLoading)
@@ -195,7 +188,6 @@ const LoginForm = () => {
   )
 }
 
-
 const store = configureStore({
   reducer: { 
             [authSlice.name]:persistReducer({key: 'auth', storage}, authSlice.reducer),
@@ -208,15 +200,12 @@ const persistor = persistStore(store)
 store.subscribe(() => console.log(store.getState()))
 console.log(store)
 
-
 const PageMain = () => 
-<>
-  <h1>Головна</h1>
-  <ShowNick/>
-  <ChangeNick/>
-</>
-
-
+    <>
+    <h1>Головна</h1>
+    <ShowNick/>
+    <ChangeNick/>
+    </>
 
 const PageLogin = () => {
   const isLoggedIn = useSelector(state => state.auth.token)
@@ -236,7 +225,6 @@ const Header = () =>
   <Link to="/">Головна</Link>
   <Link to="/login">Увійти</Link>
 </header>
-
 
 function App(){ 
   return (
