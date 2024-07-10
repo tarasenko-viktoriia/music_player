@@ -107,7 +107,7 @@ export default function Song(props) {
         <div className="song" onClick={handleChangeSong}>
             <div className="song-container">
                 <div className="name-song-container">
-                    <img src={props.image} alt="Song"/>
+                    <img src={props.image} alt={props.title}/>
                     <div className="song-info">
                         <div className="song-title">{props.title}</div>
                         <div className="song-artist">{props.artist}</div>
