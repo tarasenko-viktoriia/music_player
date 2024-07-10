@@ -17,8 +17,8 @@ export default function Player() {
 
     const index = songsList.findIndex((item) => item.id === currentSong?.id);
 
-    const isPrev = () => index > 0 && songsList.length > 1;
-    const isNext = () => index < songsList.length - 1 && songsList.length > 1;
+    const isPrev = () => (playbackMode === "shuffle" ? shuffleIndex > 0 : index > 0) && songsList.length > 1;
+    const isNext = () => songsList.length > 1;
 
     useEffect(() => {
         const player = audioRef.current;
@@ -28,8 +28,12 @@ export default function Player() {
         };
 
         const handleEnded = () => {
-            if (playbackMode === "normal" && isNext()) {
-                changeAndPlaySong(songsList[index + 1]);
+            if (playbackMode === "normal") {
+                if (index < songsList.length - 1) {
+                    changeAndPlaySong(songsList[index + 1]);
+                } else {
+                    changeAndPlaySong(songsList[0]);
+                }
             } else if (playbackMode === "shuffle") {
                 if (shuffleIndex < shuffleList.length - 1) {
                     setShuffleIndex(shuffleIndex + 1);
@@ -52,7 +56,7 @@ export default function Player() {
             player.removeEventListener('canplay', handleCanPlay);
             player.removeEventListener('ended', handleEnded);
         };
-    }, [currentSong, playbackMode, shuffleIndex, shuffleList]);
+    }, [currentSong, playbackMode, shuffleIndex, shuffleList, index]);
 
     useEffect(() => {
         if (playbackMode === "shuffle") {
@@ -121,7 +125,12 @@ export default function Player() {
                 </div>
                 <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
                     if (isPrev()) {
-                        changeAndPlaySong(songsList[index - 1]);
+                        if (playbackMode === "shuffle") {
+                            setShuffleIndex(shuffleIndex - 1);
+                            changeAndPlaySong(shuffleList[shuffleIndex - 1]);
+                        } else {
+                            changeAndPlaySong(songsList[index - 1]);
+                        }
                     }
                 }}>
                     <ArrowBackIosIcon />
@@ -131,7 +140,23 @@ export default function Player() {
                 </audio>
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
-                        changeAndPlaySong(songsList[index + 1]);
+                        if (playbackMode === "shuffle") {
+                            if (shuffleIndex < shuffleList.length - 1) {
+                                setShuffleIndex(shuffleIndex + 1);
+                                changeAndPlaySong(shuffleList[shuffleIndex + 1]);
+                            } else {
+                                const newShuffleList = shuffleArray([...songsList]);
+                                setShuffleList(newShuffleList);
+                                setShuffleIndex(0);
+                                changeAndPlaySong(newShuffleList[0]);
+                            }
+                        } else {
+                            if (index < songsList.length - 1) {
+                                changeAndPlaySong(songsList[index + 1]);
+                            } else {
+                                changeAndPlaySong(songsList[0]);
+                            }
+                        }
                     }
                 }}>
                     <ArrowForwardIosIcon />
