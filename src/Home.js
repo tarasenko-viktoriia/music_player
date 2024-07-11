@@ -11,7 +11,7 @@ import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
-import Login from "./Login"
+import Login from "./Login";
 
 export default function Home() {
     const [isSongs, setIsSongs] = useState(true);
@@ -72,6 +72,7 @@ export default function Home() {
                 <div className="hero-container">
                     <div className="input-container">
                         <input
+
                             className="search-input"
                             type="search"
                             placeholder="Search..."

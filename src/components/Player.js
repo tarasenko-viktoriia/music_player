@@ -13,6 +13,7 @@ export default function Player() {
     const audioRef = useRef(null);
     const [songTitle, setSongTitle] = useState("");
     const [playbackMode, setPlaybackMode] = useState("normal"); // Доданий стан для режиму відтворення
+    const [isPlaying, setIsPlaying] = useState(false); // Доданий стан для відстеження відтворення
     const [shuffleList, setShuffleList] = useState([]);
     const [shuffleIndex, setShuffleIndex] = useState(0);
 
@@ -31,6 +32,7 @@ export default function Player() {
         };
 
         const handleEnded = () => {
+            setIsPlaying(false);
             if (playbackMode === "normal") {
                 if (index < songsList.length - 1) {
                     changeAndPlaySong(songsList[index + 1]);
@@ -52,12 +54,24 @@ export default function Player() {
             }
         };
 
+        const handlePlay = () => {
+            setIsPlaying(true);
+        };
+
+        const handlePause = () => {
+            setIsPlaying(false);
+        };
+
         player.addEventListener('canplay', handleCanPlay);
         player.addEventListener('ended', handleEnded);
+        player.addEventListener('play', handlePlay);
+        player.addEventListener('pause', handlePause);
 
         return () => {
             player.removeEventListener('canplay', handleCanPlay);
             player.removeEventListener('ended', handleEnded);
+            player.removeEventListener('play', handlePlay);
+            player.removeEventListener('pause', handlePause);
         };
     }, [currentSong, playbackMode, shuffleIndex, shuffleList, index]);
 
@@ -110,12 +124,12 @@ export default function Player() {
     return (
         <div className="player">
             <div>
-                <div className="equalizer">
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
-                    <div className="bar"></div>
+            <div className={`equalizer ${isPlaying ? 'playing' : ''}`}>
+                    <div className="bar bar1"></div>
+                    <div className="bar bar2"></div>
+                    <div className="bar bar3"></div>
+                    <div className="bar bar4"></div>
+                    <div className="bar bar5"></div>
                 </div>
                 <div className="name">{songTitle}</div> {/* Відображення назви пісні */}
                 <div className="player-controls" onClick={togglePlaybackMode}>
