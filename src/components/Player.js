@@ -110,10 +110,13 @@ export default function Player() {
     return (
         <div className="player">
             <div>
-                <img src={currentSong?.artwork} alt={currentSong?.title}
-                    height="50"
-                    width="50"
-                    style={{ borderRadius: "15px", marginRight: 10 }} />
+                <div className="equalizer">
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                    <div className="bar"></div>
+                </div>
                 <div className="name">{songTitle}</div> {/* Відображення назви пісні */}
                 <div className="player-controls" onClick={togglePlaybackMode}>
                     {playbackMode === "normal" && (

@@ -5,6 +5,8 @@ import { addSongToPlaylist, removeSongFromPlaylist, removeSongFromAllPlaylists, 
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import PauseIcon from '@mui/icons-material/Pause';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 
 const defaultPlaylistImage = '../image/default-img.jpg';
@@ -12,7 +14,6 @@ const defaultPlaylistImage = '../image/default-img.jpg';
 export default function Song(props) {
     const song = useSelector(state => state.song.currentSong);
     const playlists = useSelector(state => state.list.playlists);
-    const songsList = useSelector(state => state.list.value);
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState(false);
@@ -24,6 +25,7 @@ export default function Song(props) {
     const [editedTitle, setEditedTitle] = useState(props.title);
     const [editedArtist, setEditedArtist] = useState(props.artist);
     const [editedImage, setEditedImage] = useState(null);
+    const [isPlaying, setIsPlaying] = useState(false);
 
     useEffect(() => {
         setEditedTitle(props.title);
@@ -31,8 +33,13 @@ export default function Song(props) {
         setEditedImage(props.image);
     }, [props.title, props.artist, props.image]);
 
-    // Check if this song is the current playing song
-    const isCurrentlyPlaying = song && song.id === props.id;
+    useEffect(() => {
+        if (song && song.id === props.id) {
+            setIsPlaying(true);
+        } else {
+            setIsPlaying(false);
+        }
+    }, [song, props.id]);
 
     const handleAddSong = (e) => {
         e.stopPropagation();
@@ -93,10 +100,21 @@ export default function Song(props) {
     };
 
     const handleChangeSong = () => {
-        dispatch(changeSong(props));
-        const player = document.getElementById("audio");
-        player.load();
-        player.play();
+        if (song && song.id === props.id) {
+            const player = document.getElementById("audio");
+            if (isPlaying) {
+                player.pause();
+            } else {
+                player.play();
+            }
+            setIsPlaying(!isPlaying);
+        } else {
+            dispatch(changeSong(props));
+            const player = document.getElementById("audio");
+            player.load();
+            player.play();
+            setIsPlaying(true);
+        }
     };
 
     const handleEditSong = (e) => {
@@ -110,10 +128,14 @@ export default function Song(props) {
     };
 
     return (
-        <div className={`song ${isCurrentlyPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
+        <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
                 <div className="name-song-container">
-                    <img src={props.image} alt={props.title}/>
+                    {isPlaying ? (
+                        <PauseIcon />
+                    ) : (
+                        <PlayArrowIcon />
+                    )}
                     <div className="song-info">
                         <div className="song-title">{props.title}</div>
                         <div className="song-artist">{props.artist}</div>
@@ -197,21 +219,6 @@ export default function Song(props) {
                         value={editedArtist}
                         onChange={(e) => setEditedArtist(e.target.value)}
                     />
-                    <Button
-                        variant="contained"
-                        component="label"
-                        sx={{ mt: 2 }}
-                    >
-                        Завантажити зображення
-                        <input
-                            type="file"
-                            hidden
-                            onChange={handleImageChangeSong}
-                        />
-                    </Button>
-                    {editedImage && (
-                        <img src={editedImage} alt="Song" style={{ marginTop: '10px', width: '100%' }} />
-                    )}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleDialogClose}>Скасувати</Button>
