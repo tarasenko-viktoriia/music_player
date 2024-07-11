@@ -3,6 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeSong } from "../Redux/reducer/song";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ShuffleIcon from '@mui/icons-material/Shuffle';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 export default function Player() {
     const currentSong = useSelector(state => state.song.currentSong);
@@ -114,13 +117,13 @@ export default function Player() {
                 <div className="name">{songTitle}</div> {/* Відображення назви пісні */}
                 <div className="player-controls" onClick={togglePlaybackMode}>
                     {playbackMode === "normal" && (
-                        <span>Normal</span>
+                        <RepeatIcon  />
                     )}
                     {playbackMode === "shuffle" && (
-                        <span>Shuffle</span>
+                        <ShuffleIcon />
                     )}
                     {playbackMode === "repeat" && (
-                        <span>Repeat</span>
+                        <RestartAltIcon/>
                     )}
                 </div>
                 <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
