@@ -87,12 +87,6 @@ export default function Song(props) {
         setNewPlaylistOpen(false);
     };
 
-    const handleImageChangeSong = (event) => {
-        if (event.target.files && event.target.files[0]) {
-            setEditedImage(URL.createObjectURL(event.target.files[0]));
-        }
-    };
-
     const handleImageChangePlaylist = (event) => {
         if (event.target.files && event.target.files[0]) {
             setNewPlaylistImage(URL.createObjectURL(event.target.files[0]));
