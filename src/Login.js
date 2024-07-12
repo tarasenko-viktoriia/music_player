@@ -6,10 +6,7 @@ import createHistory from 'history/createBrowserHistory';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 import storage from 'redux-persist/lib/storage';
-import {
-  persistReducer,
-  persistStore,
-} from 'redux-persist';
+import { persistReducer, persistStore } from 'redux-persist';
 
 const history = createHistory();
 
@@ -28,8 +25,14 @@ function jwtDecode(token) {
 const ShowLogin = () => {
   const login = useSelector((state) => state.auth.payload?.sub.login);
   const nick = useSelector((state) => state.auth.payload?.sub.nick);
+  const avatarUrl = useSelector((state) => state.auth.profile?.avatar?.url);
 
-  return <span> Hi, {nick || login || 'Anon'}</span>;
+  return (
+    <span>
+      {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '50px', borderRadius: '50%' }} />}
+      Hi, {nick || login || 'Anon'}
+    </span>
+  );
 };
 
 const Logout = () => {
@@ -130,7 +133,7 @@ const api = createApi({
       invalidatesTags: (result, error, { _id }) => [{ type: 'User', id: _id }],
     }),
     registerUser: builder.mutation({
-      query: ({ login, password}) => ({
+      query: ({ login, password }) => ({
         document: `
         mutation register($login:String!, $password:String!) {
           createUser(login:$login, password:$password){
@@ -138,7 +141,7 @@ const api = createApi({
           }
         }
         `,
-        variables: { login, password},
+        variables: { login, password },
       }),
       onQueryStarted: async (args, { dispatch, queryFulfilled }) => {
         try {
@@ -152,15 +155,30 @@ const api = createApi({
         }
       },
     }),
+    uploadAvatar: builder.mutation({
+      query: ({ _id, avatar }) => ({
+        document: `
+          mutation uploadAvatar($_id: String!, $avatar: ImageInput!) {
+            UserUpsert(user: { _id: $_id, avatar: $avatar }) {
+              _id
+              avatar {
+                url
+              }
+            }
+          }
+        `,
+        variables: { _id, avatar },
+      }),
+      invalidatesTags: (result, error, { _id }) => [{ type: 'User', id: _id }],
+    }),
   }),
 });
 
-const { useGetUserByIdQuery, useLoginMutation, useSetUserNickMutation } = api;
+const { useGetUserByIdQuery, useLoginMutation, useSetUserNickMutation, useUploadAvatarMutation } = api;
 
 const actionFullLogin = ({ login, password }) => async (dispatch) => {
   try {
     const token = await dispatch(api.endpoints.login.initiate({ login, password }));
-    console.log('Login token:', token);
     if (token?.data?.login) {
       dispatch(authSlice.actions.login(token.data.login));
       await dispatch(actionAboutMe());
@@ -175,7 +193,6 @@ const actionAboutMe = () => async (dispatch, getState) => {
   if (auth.payload) {
     const { id } = auth.payload.sub;
     await dispatch(api.endpoints.getUserById.initiate({ _id: id }));
-    // Optionally handle user data after fetching
   }
 };
 
@@ -188,7 +205,6 @@ const RegisterForm = () => {
     try {
       const result = await dispatch(api.endpoints.registerUser.initiate({ login, password }));
       console.log(result);
-      // Handle success or error
     } catch (error) {
       console.error('Registration failed:', error);
     }
@@ -203,6 +219,43 @@ const RegisterForm = () => {
   );
 };
 
+const AvatarUpload = () => {
+  const [avatar, setAvatar] = useState(null);
+  const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.payload?.sub?.id);
+  const [avatarUrl, setAvatarUrl] = useState(null); // Додано стан для зберігання URL аватара
+
+  const handleFileChange = (e) => {
+    setAvatar(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append('avatar', avatar);
+    const result = await uploadAvatar({ _id: userId, avatar: formData });
+
+    // Оновлення стану з URL завантаженого аватара
+    if (result.data?.UserUpsert?.avatar?.url) {
+      setAvatarUrl(result.data.UserUpsert.avatar.url);
+    }
+  };
+
+  return (
+    <div>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload} disabled={isLoading || !avatar}>
+        Upload Avatar
+      </button>
+      {avatarUrl && (
+        <div>
+          <h2>Uploaded Avatar:</h2>
+          <img src={avatarUrl} alt="Avatar" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+        </div>
+      )}
+    </div>
+  );
+};
 const store = configureStore({
   reducer: {
     [authSlice.name]: persistReducer({ key: 'auth', storage }, authSlice.reducer),
@@ -235,6 +288,7 @@ const PageMain = () => (
     <h1>Головна</h1>
     <ShowNick />
     <ChangeNick />
+    <AvatarUpload /> {/* Додано для завантаження аватара */}
   </>
 );
 
