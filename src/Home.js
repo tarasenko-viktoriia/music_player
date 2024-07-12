@@ -72,7 +72,6 @@ export default function Home() {
                 <div className="hero-container">
                     <div className="input-container">
                         <input
-
                             className="search-input"
                             type="search"
                             placeholder="Search..."
@@ -101,8 +100,6 @@ export default function Home() {
                 <aside className="sidebar-right">
                     <div className="log-in-container">
                         <Login/>
-                        {/* <p>To use all Bits functions, login into your account</p>
-                        <button onClick={handleLoginOpen}>Log in</button> */}
                     </div>
                     {song && <Player />}
                     <div>
