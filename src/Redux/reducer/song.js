@@ -16,10 +16,6 @@ const songSlice = createSlice({
         addSong: (state, action) => {
             state.songsList.push(action.payload);
         },
-        removeSong(state, action) {
-            const songId = action.payload;
-            state.songsList = state.songsList.filter(song => song.id !== songId);
-        },
         updateSongDetails: (state, action) => {
             const { id, title, artist, image } = action.payload;
             const song = state.songsList.find(song => song.id === id);
@@ -32,6 +28,6 @@ const songSlice = createSlice({
     },
 });
 
-export const { changeSong, addSong, removeSong, updateSongDetails } = songSlice.actions;
+export const { changeSong, addSong, updateSongDetails } = songSlice.actions;
 
 export default songSlice.reducer;
