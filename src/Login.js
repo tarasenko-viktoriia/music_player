@@ -25,9 +25,11 @@ function jwtDecode(token) {
 const ShowLogin = () => {
   const login = useSelector((state) => state.auth.payload?.sub.login);
   const nick = useSelector((state) => state.auth.payload?.sub.nick);
+  const avatarUrl = useSelector((state) => state.auth.profile?.avatar?.url);
 
   return (
     <span>
+      {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '50px', borderRadius: '50%' }} />}
       Hi, {nick || login || 'Anon'}
     </span>
   );
@@ -172,7 +174,7 @@ const api = createApi({
   }),
 });
 
-const { useGetUserByIdQuery, useLoginMutation, useSetUserNickMutation } = api;
+const { useGetUserByIdQuery, useLoginMutation, useSetUserNickMutation, useUploadAvatarMutation } = api;
 
 const actionFullLogin = ({ login, password }) => async (dispatch) => {
   try {
@@ -217,6 +219,43 @@ const RegisterForm = () => {
   );
 };
 
+const AvatarUpload = () => {
+  const [avatar, setAvatar] = useState(null);
+  const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
+  const dispatch = useDispatch();
+  const userId = useSelector((state) => state.auth.payload?.sub?.id);
+  const [avatarUrl, setAvatarUrl] = useState(null); // Додано стан для зберігання URL аватара
+
+  const handleFileChange = (e) => {
+    setAvatar(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    const formData = new FormData();
+    formData.append('avatar', avatar);
+    const result = await uploadAvatar({ _id: userId, avatar: formData });
+
+
+    if (result.data?.UserUpsert?.avatar?.url) {
+      setAvatarUrl(result.data.UserUpsert.avatar.url);
+    }
+  };
+
+  return (
+    <div>
+      <input type="file" onChange={handleFileChange} />
+      <button onClick={handleUpload} disabled={isLoading || !avatar}>
+        Upload Avatar
+      </button>
+      {avatarUrl && (
+        <div>
+          <h2>Uploaded Avatar:</h2>
+          <img src={avatarUrl} alt="Avatar" style={{ maxWidth: '100px', maxHeight: '100px' }} />
+        </div>
+      )}
+    </div>
+  );
+};
 const store = configureStore({
   reducer: {
     [authSlice.name]: persistReducer({ key: 'auth', storage }, authSlice.reducer),
@@ -249,6 +288,7 @@ const PageMain = () => (
     <h1>Головна</h1>
     <ShowNick />
     <ChangeNick />
+    <AvatarUpload /> {/* Додано для завантаження аватара */}
   </>
 );
 
