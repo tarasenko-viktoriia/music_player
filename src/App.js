@@ -1,15 +1,27 @@
-import React from "react";
-import './App.css';
-import Home from './Home';
-import { Provider } from "react-redux";
-import {store} from "./Redux/Store"
+import React from 'react';
+import PlayerControls from './components/PlayerControls';
+import Playlist from './components/Playlist';
+import { useDispatch } from 'react-redux';
+import { setAudioPlaylist } from './Redux/playerSlice';
 
-function App() {
-  return (
-    <Provider store ={store}>
-      <Home/>
-    </Provider>
-  );
-}
+const App = () => {
+    const dispatch = useDispatch();
+
+    const samplePlaylist = {
+        tracks: []
+    };
+
+    React.useEffect(() => {
+        dispatch(setAudioPlaylist(samplePlaylist));
+    }, [dispatch]);
+
+    return (
+        <div className="app">
+            <h1>Music Player</h1>
+            <PlayerControls />
+            <Playlist />
+        </div>
+    );
+};
 
 export default App;

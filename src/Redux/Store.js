@@ -1,10 +1,13 @@
-import { configureStore } from "@reduxjs/toolkit";
-import listReducer from "./reducer/list";
-import songReducer from "./reducer/song";
+import { configureStore } from '@reduxjs/toolkit';
+import playerReducer, { audioMiddleware }  from '../Redux/playerSlice';
+import {thunk} from 'redux-thunk';
 
-export const store = configureStore({
+const store = configureStore({
     reducer: {
-        list: listReducer,
-        song: songReducer,
+      player: playerReducer,
     },
-});
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(audioMiddleware),
+  });
+
+export default store;
