@@ -7,7 +7,6 @@ import { setAudioPlaylist } from './Redux/playerSlice';
 const App = () => {
     const dispatch = useDispatch();
 
-    // Пример плейлиста
     const samplePlaylist = {
         tracks: []
     };
