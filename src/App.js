@@ -1,59 +1,33 @@
-import React, { useEffect } from 'react';
-import AudioPlayer from './components/AudioPlayer';
-import UploadTrack from './components/UploadTrack';
-import { useDispatch, useSelector } from 'react-redux';
-import { setPlaylist, setTrack, play, pause, stop, nextTrack, prevTrack } from './Redux/playerSlice';
+import React from 'react';
+import PlayerControls from './components/PlayerControls';
+import Playlist from './components/Playlist';
+import { useDispatch } from 'react-redux';
+import { setAudioPlaylist } from './Redux/playerSlice';
 
 const App = () => {
     const dispatch = useDispatch();
-    const playlist = useSelector((state) => state.player.playlist);
-    const track = useSelector((state) => state.player.track);
 
+    // Пример плейлиста
     const samplePlaylist = {
         _id: '1',
-        name: 'Sample Playlist',
-        tracks: [],
+        name: 'My Playlist',
+        tracks: [
+            { _id: '1', url: 'path/to/song1.mp3', name: 'Song 1' },
+            { _id: '2', url: 'path/to/song2.mp3', name: 'Song 2' },
+            { _id: '3', url: 'path/to/song3.mp3', name: 'Song 3' }
+        ]
     };
 
-    useEffect(() => {
-        dispatch(setPlaylist(samplePlaylist));
+    // Установим плейлист при загрузке компонента
+    React.useEffect(() => {
+        dispatch(setAudioPlaylist(samplePlaylist));
     }, [dispatch]);
 
-    const handlePlay = () => {
-        if (track.url) {
-            dispatch(play());
-        } else if (playlist.tracks.length > 0) {
-            dispatch(setTrack(playlist.tracks[0]));
-            dispatch(play());
-        }
-    };
-
-    const handlePause = () => {
-        dispatch(pause());
-    };
-
-    const handleStop = () => {
-        dispatch(stop());
-    };
-
-    const handleNextTrack = () => {
-        dispatch(nextTrack());
-    };
-
-    const handlePrevTrack = () => {
-        dispatch(prevTrack());
-    };
-
     return (
-        <div>
+        <div className="app">
             <h1>Music Player</h1>
-            <AudioPlayer />
-            <button onClick={handlePlay}>Play</button>
-            <button onClick={handlePause}>Pause</button>
-            <button onClick={handleStop}>Stop</button>
-            <button onClick={handleNextTrack}>Next</button>
-            <button onClick={handlePrevTrack}>Prev</button>
-            <UploadTrack />
+            <PlayerControls />
+            <Playlist />
         </div>
     );
 };
