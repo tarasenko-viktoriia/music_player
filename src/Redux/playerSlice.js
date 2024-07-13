@@ -75,7 +75,6 @@ export const addTrackToPlaylist = createAsyncThunk('player/addTrackToPlaylist', 
     };
     dispatch(setAudioPlaylist(updatedPlaylist));
 
-    // Почніть грати новий трек
     if (!state.player.isPlaying) {
         dispatch(setAudioTrack(updatedPlaylist.tracks.length - 1));
     }
@@ -131,7 +130,6 @@ export const playerSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(addTrackToPlaylist.fulfilled, (state, action) => {
-            // Handle fulfilled action if needed
         });
     },
 });
