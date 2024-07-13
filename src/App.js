@@ -55,7 +55,6 @@ const App = () => {
                     <div className="app">
                         <h1>Music Player</h1>
                         <PlayerControls />
-                        <Playlist />
                     </div>
                     <div>
                     </div>
