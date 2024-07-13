@@ -1,6 +1,5 @@
 import React from 'react';
 import PlayerControls from './components/PlayerControls';
-import Playlist from './components/Playlist';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAudioPlaylist } from './Redux/playerSlice';
 import './App.css';
