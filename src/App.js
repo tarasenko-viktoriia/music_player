@@ -1,13 +1,15 @@
 import React from 'react';
 import PlayerControls from './components/PlayerControls';
 import Playlist from './components/Playlist';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setAudioPlaylist } from './Redux/playerSlice';
 import './App.css';
 import Menu from './components/Menu';
+import Song from './components/Song';
 
 const App = () => {
     const dispatch = useDispatch();
+    const playlist = useSelector(state => state.player.playlist);
 
     const samplePlaylist = {
         tracks: []
@@ -37,31 +39,18 @@ const App = () => {
                             className="search-input"
                             type="search"
                             placeholder="Search..."
-                            // value={search}
-                            // onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    {/* {isSongs ? (
-                        <div className="songs">
-                            {songsList
-                                .filter(data =>
-                                    data.title.toLowerCase().includes(search.toLowerCase())
-                                )
-                                .map(item => (
-                                    <div key={item.id} onClick={() => dispatch(changeSong(item, false))}>
-                                        <Song {...item} />
-                                    </div>
-                                ))}
-                        </div>
-                    ) : (
-                        <Playlist search={search} />
-                    )} */}
+                    <div className="playlist">
+                        {playlist.tracks.map((track, index) => (
+                            <Song key={track._id} id={track._id} title={track.name} artist={track.artist} />
+                        ))}
+                    </div>
                 </div>
             </main>
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
                     <div className="log-in-container">
-                        {/* <Login/> */}
                     </div>
                     <div className="app">
                         <h1>Music Player</h1>
@@ -69,16 +58,9 @@ const App = () => {
                         <Playlist />
                     </div>
                     <div>
-                        {/* <Basic onFilesSelected={handleAddSong} /> */}
                     </div>
                 </aside>
             </div>
-            {/* <LoginDialog
-                open={loginOpen}
-                handleClose={handleLoginClose}
-                handleSignupOpen={handleSignupOpen}
-            />
-            <SignupDialog open={signupOpen} handleClose={handleSignupClose} /> */}
         </div>
     );
 };
