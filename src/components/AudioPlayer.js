@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentTime, setDuration, nextTrack } from '../Redux/playerSlice';
 
@@ -6,7 +6,7 @@ const AudioPlayer = () => {
     const audioRef = useRef(new Audio());
     const dispatch = useDispatch();
     const { isPlaying, isStopped, track, currentTime, volume } = useSelector((state) => state.player);
-    const progressRef = useRef(0); // референційний об'єкт для зберігання прогресу
+    const [durationDisplay, setDurationDisplay] = useState('0:00');
     const volumeRef = useRef(volume * 100);
 
     useEffect(() => {
@@ -14,21 +14,6 @@ const AudioPlayer = () => {
         audio.src = track.url;
         audio.currentTime = currentTime;
 
-        // Обробники подій
-        audio.addEventListener('timeupdate', handleTimeUpdate);
-        audio.addEventListener('durationchange', handleDurationChange);
-        audio.addEventListener('ended', handleEnded);
-
-        return () => {
-            // Прибирання обробників подій при розмонтуванні компонента
-            audio.removeEventListener('timeupdate', handleTimeUpdate);
-            audio.removeEventListener('durationchange', handleDurationChange);
-            audio.removeEventListener('ended', handleEnded);
-        };
-    }, [track]);
-
-    useEffect(() => {
-        const audio = audioRef.current;
         if (isPlaying) {
             audio.play().catch((error) => {
                 console.error('Error playing audio:', error);
@@ -36,7 +21,17 @@ const AudioPlayer = () => {
         } else {
             audio.pause();
         }
-    }, [isPlaying]);
+
+        audio.addEventListener('timeupdate', handleTimeUpdate);
+        audio.addEventListener('durationchange', handleDurationChange);
+        audio.addEventListener('ended', handleEnded);
+
+        return () => {
+            audio.removeEventListener('timeupdate', handleTimeUpdate);
+            audio.removeEventListener('durationchange', handleDurationChange);
+            audio.removeEventListener('ended', handleEnded);
+        };
+    }, [track, isPlaying]);
 
     useEffect(() => {
         const audio = audioRef.current;
@@ -49,18 +44,23 @@ const AudioPlayer = () => {
     useEffect(() => {
         const audio = audioRef.current;
         audio.volume = volume;
+        volumeRef.current = volume * 100;
     }, [volume]);
 
     const handleTimeUpdate = () => {
         const audio = audioRef.current;
         const currentTime = audio.currentTime;
-        const duration = audio.duration;
-        progressRef.current = (currentTime / duration) * 100;
         dispatch(setCurrentTime(currentTime));
     };
 
     const handleDurationChange = () => {
-        dispatch(setDuration(audioRef.current.duration));
+        const audio = audioRef.current;
+        const duration = audio.duration;
+        dispatch(setDuration(duration));
+
+        const minutes = Math.floor(duration / 60);
+        const seconds = Math.floor(duration % 60);
+        setDurationDisplay(`${minutes}:${seconds.toString().padStart(2, '0')}`);
     };
 
     const handleEnded = () => {
@@ -72,7 +72,6 @@ const AudioPlayer = () => {
         const duration = audio.duration;
         const seekTime = (e.target.value / 100) * duration;
         audio.currentTime = seekTime;
-        progressRef.current = e.target.value; 
     };
 
     const handleVolumeChange = (e) => {
@@ -88,10 +87,11 @@ const AudioPlayer = () => {
                 type="range"
                 min="0"
                 max="100"
-                value={progressRef.current}
+                value={(currentTime / audioRef.current.duration) * 100}
                 onChange={handleSeek}
                 style={{ width: '100%' }}
             />
+            <div>{durationDisplay}</div>
             <input
                 type="range"
                 min="0"
