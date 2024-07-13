@@ -10,6 +10,7 @@ import {
     setVolume,
     addTrackToPlaylist
 } from '../Redux/playerSlice';
+import { useDropzone } from 'react-dropzone';
 
 const PlayerControls = () => {
     const dispatch = useDispatch();
@@ -43,9 +44,8 @@ const PlayerControls = () => {
         dispatch(setVolume(event.target.value));
     };
 
-    const handleFileUpload = (event) => {
-        const file = event.target.files[0];
-        if (file) {
+    const onDrop = (acceptedFiles) => {
+        acceptedFiles.forEach((file) => {
             const url = URL.createObjectURL(file);
             const newTrack = {
                 _id: new Date().getTime().toString(),
@@ -53,8 +53,10 @@ const PlayerControls = () => {
                 name: file.name
             };
             dispatch(addTrackToPlaylist(newTrack));
-        }
+        });
     };
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     return (
         <div>
@@ -78,11 +80,10 @@ const PlayerControls = () => {
                 max="1"
                 step="0.01"
             />
-            <input
-                type="file"
-                accept="audio/*"
-                onChange={handleFileUpload}
-            />
+            <div {...getRootProps({ className: 'dropzone' })} style={{ width: '100%', height: '100px', border: '2px dashed #ccc', borderRadius: '5px', textAlign: 'center', paddingTop: '30px', cursor: 'pointer' }}>
+                <input {...getInputProps()} />
+                <p>Перетягніть файли сюди або клікніть для вибору файлів</p>
+            </div>
         </div>
     );
 };
