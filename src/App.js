@@ -5,6 +5,7 @@ import { setAudioPlaylist } from './Redux/playerSlice';
 import './App.css';
 import Menu from './components/Menu';
 import Song from './components/Song';
+import Login from "./Login"
 
 const App = () => {
     const dispatch = useDispatch();
@@ -50,6 +51,7 @@ const App = () => {
             <div className="sidebar-wrapper-right">
                 <aside className="sidebar-right">
                     <div className="log-in-container">
+                        <Login/>
                     </div>
                     <div className="app">
                         <h1>Music Player</h1>
