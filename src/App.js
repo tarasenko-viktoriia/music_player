@@ -4,7 +4,7 @@ import Playlist from './components/Playlist';
 import { useDispatch } from 'react-redux';
 import { setAudioPlaylist } from './Redux/playerSlice';
 import './App.css';
-// import Menu from './components/Menu';
+import Menu from './components/Menu';
 
 const App = () => {
     const dispatch = useDispatch();
@@ -26,7 +26,7 @@ const App = () => {
                         <p>Bits</p>
                     </div>
                     <div>
-                        {/* <Menu /> */}
+                        <Menu />
                     </div>
                 </aside>
             </div>
@@ -34,9 +34,9 @@ const App = () => {
                 <div className="hero-container">
                     <div className="input-container">
                         <input
-                            // className="search-input"
-                            // type="search"
-                            // placeholder="Search..."
+                            className="search-input"
+                            type="search"
+                            placeholder="Search..."
                             // value={search}
                             // onChange={(e) => setSearch(e.target.value)}
                         />
