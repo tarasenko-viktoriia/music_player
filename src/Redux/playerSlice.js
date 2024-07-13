@@ -29,6 +29,7 @@ const playerSlice = createSlice({
         },
         setTrack: (state, action) => {
             state.track = action.payload;
+            state.currentTime = 0; // Встановлюємо початковий час при зміні треку
         },
         setDuration: (state, action) => {
             state.duration = action.payload;
@@ -37,18 +38,21 @@ const playerSlice = createSlice({
             if (state.playlist.tracks.length > 0) {
                 state.playlistIndex = (state.playlistIndex + 1) % state.playlist.tracks.length;
                 state.track = state.playlist.tracks[state.playlistIndex];
+                state.currentTime = 0;
             }
         },
         prevTrack: (state) => {
             if (state.playlist.tracks.length > 0) {
                 state.playlistIndex = (state.playlistIndex - 1 + state.playlist.tracks.length) % state.playlist.tracks.length;
                 state.track = state.playlist.tracks[state.playlistIndex];
+                state.currentTime = 0;
             }
         },
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
             state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '' };
+            state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {
             state.currentTime = action.payload;
