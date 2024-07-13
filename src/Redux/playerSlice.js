@@ -2,6 +2,20 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 const audio = new Audio();
 
+const audioStateListener = (dispatch) => {
+    audio.onended = () => {
+        dispatch(playNextTrack());
+    };
+
+    audio.ondurationchange = () => {
+        dispatch(setDuration(audio.duration));
+    };
+
+    audio.ontimeupdate = () => {
+        dispatch(setCurrentTime(audio.currentTime));
+    };
+};
+
 const initialState = {
     isPlaying: false,
     isStopped: true,
@@ -146,5 +160,10 @@ export const {
     setCurrentTime,
     setVolume,
 } = playerSlice.actions;
+
+export const audioMiddleware = (store) => (next) => (action) => {
+    audioStateListener(store.dispatch);
+    return next(action);
+};
 
 export default playerSlice.reducer;
