@@ -74,10 +74,20 @@ export const playerSlice = createSlice({
             state.volume = action.payload;
             audio.volume = action.payload;
         },
+
+        updateSongDetails: (state, action) => {
+            const { id, title, artist } = action.payload;
+            const trackToUpdate = state.playlist.tracks.find(track => track.id === id);
+            if (trackToUpdate) {
+                trackToUpdate.title = title;
+                trackToUpdate.artist = artist;
+            }
+        }
+        
     },
 });
 
-export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume } = playerSlice.actions;
+export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails } = playerSlice.actions;
 
 export const audioMiddleware = (store) => (next) => (action) => {
     audioStateListener(store.dispatch);

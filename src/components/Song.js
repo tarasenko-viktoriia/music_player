@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { pauseAudio, playAudio } from '../Redux/playerSlice';
+import { pauseAudio, playAudio, updateSongDetails } from '../Redux/playerSlice';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import Modal from '@mui/material/Modal';
-import { Button, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Song = ({ id, title, artist }) => {
     const dispatch = useDispatch();
     const isPlaying = useSelector(state => state.player.isPlaying);
     const [modalOpen, setModalOpen] = useState(false);
-    const [newTitle, setNewTitle] = useState(title);
-    const [newArtist, setNewArtist] = useState(artist);
+    const [editOpen, setEditOpen] = useState(false);
+    const [editedTitle, setEditedTitle] = useState(title || ''); 
+    const [editedArtist, setEditedArtist] = useState(artist || '');
 
     const handlePause = () => {
         dispatch(pauseAudio());
@@ -23,17 +23,16 @@ const Song = ({ id, title, artist }) => {
     };
 
     const handleOpenModal = () => {
-        setModalOpen(true);
+        setEditOpen(true);
     };
 
     const handleCloseModal = () => {
-        setModalOpen(false);
+        setEditOpen(false);
     };
 
-    const handleSaveChanges = () => {
-        // Handle saving changes (dispatch action or API call)
-        // For example, dispatch an action to update the title and artist
-        handleCloseModal(); // Close modal after saving
+    const handleSaveEditedSong = () => {
+        dispatch(updateSongDetails({ id, title: editedTitle, artist: editedArtist }));
+        setEditOpen(false);
     };
 
     return (
@@ -59,23 +58,30 @@ const Song = ({ id, title, artist }) => {
                 </div>
             </div>
 
-            <Modal open={modalOpen} onClose={handleCloseModal}>
-                <div className="modal">
+            <Dialog open={editOpen} onClose={handleCloseModal}>
+                <DialogTitle>Редагувати пісню</DialogTitle>
+                <DialogContent>
                     <TextField
+                        fullWidth
                         label="Назва пісні"
-                        value={newTitle}
-                        onChange={(e) => setNewTitle(e.target.value)}
-                        fullWidth
+                        value={editedTitle}
+                        onChange={(e) => setEditedTitle(e.target.value)}
+                        sx={{ mb: 2 }}
                     />
                     <TextField
-                        label="Виконавець"
-                        value={newArtist}
-                        onChange={(e) => setNewArtist(e.target.value)}
                         fullWidth
+                        label="Виконавець"
+                        value={editedArtist}
+                        onChange={(e) => setEditedArtist(e.target.value)}
                     />
-                    <Button onClick={handleSaveChanges}>Зберегти</Button>
-                </div>
-            </Modal>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleCloseModal}>Скасувати</Button>
+                    <Button onClick={handleSaveEditedSong} variant="contained" color="primary" disabled={!editedTitle || !editedArtist}>
+                        Зберегти
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 };
