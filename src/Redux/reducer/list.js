@@ -1,6 +1,5 @@
-// listSlice.js
 import { createSlice } from "@reduxjs/toolkit";
-import { MusicList, PlayList } from "../../data"; // Припустимо, що це ваші початкові дані
+import { MusicList, PlayList } from "../../data"; 
 
 const initialState = {
     value: MusicList,
@@ -36,6 +35,13 @@ const listSlice = createSlice({
                 playlist.songs.push(song);
             }
         },
+        removeSongFromPlaylist: (state, action) => {
+            const { playlistId, songId } = action.payload;
+            const playlist = state.playlists.find(pl => pl.id === playlistId);
+            if (playlist) {
+                playlist.songs = playlist.songs.filter(song => song.id !== songId);
+            }
+        },
     },
 });
 
@@ -45,6 +51,7 @@ export const {
     removePlaylist,
     changePlaylist,
     addSongToPlaylist,
+    removeSongFromPlaylist,
 } = listSlice.actions;
 
 export default listSlice.reducer;

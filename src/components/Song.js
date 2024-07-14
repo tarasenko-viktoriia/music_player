@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSong, updateSongDetails, isFirstSong, isLastSong, moveSongDown, moveSongUp, deleteSong } from "../Redux/reducer/song";
-import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
+import { addSongToPlaylist, addPlaylist,  removeSongFromPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -9,7 +9,7 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField, IconButton} from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import DeleteIcon from '@mui/icons-material/Delete'; // Імпортуйте DeleteIcon
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const defaultPlaylistImage = '../image/default-img.jpg';
 
@@ -133,8 +133,12 @@ export default function Song(props) {
         dispatch(moveSongDown({ songId: props.id }));
     };
 
-    const handleDeleteSong = () => {
+    const handleDeleteFromLibrary = () => {
         dispatch(deleteSong(props.id));
+    };
+
+    const handleDeleteFromPlaylist = () => {
+        dispatch(removeSongFromPlaylist({ playlistId: selectedPlaylist, songId: props.id }));
     };
 
     return (
@@ -159,8 +163,11 @@ export default function Song(props) {
                 <IconButton onClick={handleMoveSongDown} disabled={lastSong}>
                     <ArrowDownwardIcon />
                 </IconButton>
-                <IconButton onClick={handleDeleteSong}>
-                    <DeleteIcon />
+                <IconButton onClick={handleDeleteFromLibrary}>
+                    Видалити з бібліотеки
+                </IconButton>
+                <IconButton onClick={handleDeleteFromPlaylist}>
+                    Видалити з плейлиста
                 </IconButton>
             </div>
 
