@@ -15,8 +15,8 @@ const defaultPlaylistImage = '../image/default-img.jpg';
 
 export default function Song(props) {
     const song = useSelector(state => state.song.currentSong);
-    const playlists = useSelector(state => state.list.playlists);
     const dispatch = useDispatch();
+    const playlists = useSelector(state => state.song.playlists);  
 
     const [open, setOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
