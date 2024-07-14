@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSong, updateSongDetails, isFirstSong, isLastSong, moveSongDown, moveSongUp } from "../Redux/reducer/song";
+import { changeSong, updateSongDetails, isFirstSong, isLastSong, moveSongDown, moveSongUp, deleteSong } from "../Redux/reducer/song";
 import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField, IconButton} from '@mui/material';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // імпортуйте ArrowUpwardIcon
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'; 
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import DeleteIcon from '@mui/icons-material/Delete'; // Імпортуйте DeleteIcon
 
 const defaultPlaylistImage = '../image/default-img.jpg';
 
@@ -132,6 +133,10 @@ export default function Song(props) {
         dispatch(moveSongDown({ songId: props.id }));
     };
 
+    const handleDeleteSong = () => {
+        dispatch(deleteSong(props.id));
+    };
+
     return (
         <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
@@ -153,6 +158,9 @@ export default function Song(props) {
                 </IconButton>
                 <IconButton onClick={handleMoveSongDown} disabled={lastSong}>
                     <ArrowDownwardIcon />
+                </IconButton>
+                <IconButton onClick={handleDeleteSong}>
+                    <DeleteIcon />
                 </IconButton>
             </div>
 

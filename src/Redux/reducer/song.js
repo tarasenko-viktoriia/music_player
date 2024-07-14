@@ -43,10 +43,14 @@ const songSlice = createSlice({
                 song.artist = artist;
             }
         },
+        deleteSong: (state, action) => {
+            const songId = action.payload;
+            state.songsList = state.songsList.filter(song => song.id !== songId);
+        },
     },
 });
 
-export const { changeSong, addSong, updateSongDetails, moveSongUp, moveSongDown } = songSlice.actions;
+export const { changeSong, addSong, updateSongDetails, moveSongUp, moveSongDown, deleteSong } = songSlice.actions;
 
 // Selectors
 export const selectSongsList = (state) => state.song.songsList;
