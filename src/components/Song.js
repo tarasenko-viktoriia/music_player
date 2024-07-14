@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSong, updateSongDetails } from "../Redux/reducer/song";
+import { changeSong, updateSongDetails, isFirstSong, isLastSong, moveSongDown, moveSongUp } from "../Redux/reducer/song";
 import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField, IconButton} from '@mui/material';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'; // імпортуйте ArrowUpwardIcon
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward'; 
 
 const defaultPlaylistImage = '../image/default-img.jpg';
 
@@ -25,6 +27,8 @@ export default function Song(props) {
     const [editedArtist, setEditedArtist] = useState(props.artist);
     const [editedImage, setEditedImage] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
+    const firstSong = useSelector(state => isFirstSong(state, props.id));
+    const lastSong = useSelector(state => isLastSong(state, props.id));
 
     useEffect(() => {
         setEditedTitle(props.title);
@@ -120,6 +124,14 @@ export default function Song(props) {
         setEditOpen(false);
     };
 
+    const handleMoveSongUp = () => {
+        dispatch(moveSongUp({ songId: props.id }));
+    };
+    
+    const handleMoveSongDown = () => {
+        dispatch(moveSongDown({ songId: props.id }));
+    };
+
     return (
         <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
@@ -136,6 +148,12 @@ export default function Song(props) {
                 </div>
                 <AddIcon onClick={handleAddSong} />
                 <EditIcon onClick={handleEditSong} />
+                <IconButton onClick={handleMoveSongUp} disabled={firstSong}>
+                    <ArrowUpwardIcon />
+                </IconButton>
+                <IconButton onClick={handleMoveSongDown} disabled={lastSong}>
+                    <ArrowDownwardIcon />
+                </IconButton>
             </div>
 
             <Dialog open={open} onClose={handleDialogClose}>
