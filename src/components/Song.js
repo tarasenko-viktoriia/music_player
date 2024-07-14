@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { changeSong, updateSongDetails, isFirstSong, isLastSong, moveSongDown, moveSongUp, deleteSong } from "../Redux/reducer/song";
-import { addSongToPlaylist, addPlaylist,  removeSongFromPlaylist } from "../Redux/reducer/list";
+import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -137,10 +137,6 @@ export default function Song(props) {
         dispatch(deleteSong(props.id));
     };
 
-    const handleDeleteFromPlaylist = () => {
-        dispatch(removeSongFromPlaylist({ playlistId: selectedPlaylist, songId: props.id }));
-    };
-
     return (
         <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
@@ -163,12 +159,9 @@ export default function Song(props) {
                 <IconButton onClick={handleMoveSongDown} disabled={lastSong}>
                     <ArrowDownwardIcon />
                 </IconButton>
-                <IconButton onClick={handleDeleteFromLibrary}>
+                <DeleteIcon onClick={handleDeleteFromLibrary}>
                     Видалити з бібліотеки
-                </IconButton>
-                <IconButton onClick={handleDeleteFromPlaylist}>
-                    Видалити з плейлиста
-                </IconButton>
+                </DeleteIcon>
             </div>
 
             <Dialog open={open} onClose={handleDialogClose}>

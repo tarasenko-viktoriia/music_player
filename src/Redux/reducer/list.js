@@ -35,13 +35,6 @@ const listSlice = createSlice({
                 playlist.songs.push(song);
             }
         },
-        removeSongFromPlaylist: (state, action) => {
-            const { playlistId, songId } = action.payload;
-            const playlist = state.playlists.find(pl => pl.id === playlistId);
-            if (playlist) {
-                playlist.songs = playlist.songs.filter(song => song.id !== songId);
-            }
-        },
     },
 });
 
