@@ -1,9 +1,11 @@
+// songSlice.js
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     currentSong: null,
     songsList: [],
-    playlists: [], // Ваша початкова структура плейлистів
+    playlists: [], // додано ключ playlists до початкового стану
 };
 
 const songSlice = createSlice({
@@ -21,8 +23,8 @@ const songSlice = createSlice({
             const currentIndex = state.songsList.findIndex(song => song.id === songId);
             if (currentIndex > 0) {
                 const currentSong = state.songsList[currentIndex];
-                state.songsList.splice(currentIndex, 1);
-                state.songsList.splice(currentIndex - 1, 0, currentSong);
+                state.songsList.splice(currentIndex, 1); 
+                state.songsList.splice(currentIndex - 1, 0, currentSong); 
             }
         },
         moveSongDown: (state, action) => {
@@ -30,13 +32,13 @@ const songSlice = createSlice({
             const currentIndex = state.songsList.findIndex(song => song.id === songId);
             if (currentIndex < state.songsList.length - 1) {
                 const currentSong = state.songsList[currentIndex];
-                state.songsList.splice(currentIndex, 1);
-                state.songsList.splice(currentIndex + 1, 0, currentSong);
+                state.songsList.splice(currentIndex, 1); // видаляємо поточну пісню
+                state.songsList.splice(currentIndex + 1, 0, currentSong); // вставляємо її на нову позицію
             }
         },
         updateSongDetails: (state, action) => {
             const { id, title, artist } = action.payload;
-            const song = state.songsList.find(song => song.id === id);
+            const song = state.songsList.find((song) => song.id === id);
             if (song) {
                 song.title = title;
                 song.artist = artist;
@@ -44,9 +46,29 @@ const songSlice = createSlice({
         },
         deleteSong: (state, action) => {
             const songId = action.payload;
+            
+            // Видаляємо пісню зі списку пісень
             state.songsList = state.songsList.filter(song => song.id !== songId);
-
+            
+            // Видаляємо пісню з усіх плейлистів
+            state.playlists.forEach(playlist => {
+                playlist.songs = playlist.songs.filter(song => song !== songId);
+            });
         },
+
+        deleteSong: (state, action) => {
+            const songId = action.payload;
+        
+            // Видаляємо пісню зі списку пісень
+            state.songsList = state.songsList.filter(song => song.id !== songId);
+            
+            // Видаляємо пісню з усіх плейлистів
+            state.playlists.forEach(playlist => {
+                playlist.songs = playlist.songs.filter(song => song !== songId);
+            });
+        },
+        
+        
     },
 });
 
