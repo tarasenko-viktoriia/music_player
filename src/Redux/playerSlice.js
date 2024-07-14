@@ -1,18 +1,18 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
 const audio = new Audio();
 
 const audioStateListener = (dispatch) => {
     audio.onended = () => {
-        dispatch(playNextTrack());
+        dispatch(playerSlice.actions.playNextTrack());
     };
 
     audio.ondurationchange = () => {
-        dispatch(setDuration(audio.duration));
+        dispatch(playerSlice.actions.setDuration(audio.duration));
     };
 
     audio.ontimeupdate = () => {
-        dispatch(setCurrentTime(audio.currentTime));
+        dispatch(playerSlice.actions.setCurrentTime(audio.currentTime));
     };
 };
 
@@ -26,73 +26,6 @@ const initialState = {
     currentTime: 0,
     volume: 1.0
 };
-
-export const playAudio = createAsyncThunk('player/playAudio', async (_, { dispatch }) => {
-    await audio.play();
-    dispatch(play());
-});
-
-export const pauseAudio = createAsyncThunk('player/pauseAudio', async (_, { dispatch }) => {
-    audio.pause();
-    dispatch(pause());
-});
-
-export const stopAudio = createAsyncThunk('player/stopAudio', async (_, { dispatch }) => {
-    audio.pause();
-    audio.currentTime = 0;
-    dispatch(stop());
-});
-
-export const setAudioTrack = createAsyncThunk('player/setAudioTrack', async (trackIndex, { dispatch, getState }) => {
-    const state = getState();
-    const track = state.player.playlist.tracks[trackIndex];
-    if (track) {
-        audio.src = track.url;
-        audio.currentTime = 0;
-        await audio.play();
-        dispatch(setTrack(trackIndex));
-        dispatch(play());
-    }
-});
-
-export const playNextTrack = createAsyncThunk('player/playNextTrack', async (_, { dispatch, getState }) => {
-    const state = getState();
-    const nextIndex = (state.player.playlistIndex + 1) % state.player.playlist.tracks.length;
-    dispatch(setAudioTrack(nextIndex));
-    dispatch(nextTrack());
-});
-
-export const playPrevTrack = createAsyncThunk('player/playPrevTrack', async (_, { dispatch, getState }) => {
-    const state = getState();
-    const prevIndex = (state.player.playlistIndex - 1 + state.player.playlist.tracks.length) % state.player.playlist.tracks.length;
-    dispatch(setAudioTrack(prevIndex));
-    dispatch(prevTrack());
-});
-
-export const setAudioPlaylist = createAsyncThunk('player/setAudioPlaylist', async (playlist, { dispatch }) => {
-    dispatch(setPlaylist(playlist));
-    if (playlist.tracks.length > 0) {
-        dispatch(setAudioTrack(0));
-    }
-});
-
-export const setAudioCurrentTime = createAsyncThunk('player/setAudioCurrentTime', async (currentTime, { dispatch }) => {
-    audio.currentTime = currentTime;
-    dispatch(setCurrentTime(currentTime));
-});
-
-export const addTrackToPlaylist = createAsyncThunk('player/addTrackToPlaylist', async (track, { dispatch, getState }) => {
-    const state = getState();
-    const updatedPlaylist = {
-        ...state.player.playlist,
-        tracks: [...state.player.playlist.tracks, track]
-    };
-    dispatch(setAudioPlaylist(updatedPlaylist));
-
-    if (!state.player.isPlaying) {
-        dispatch(setAudioTrack(updatedPlaylist.tracks.length - 1));
-    }
-});
 
 export const playerSlice = createSlice({
     name: 'player',
@@ -142,28 +75,81 @@ export const playerSlice = createSlice({
             audio.volume = action.payload;
         },
     },
-    extraReducers: (builder) => {
-        builder.addCase(addTrackToPlaylist.fulfilled, (state, action) => {
-        });
-    },
 });
 
-export const {
-    play,
-    pause,
-    stop,
-    setTrack,
-    setDuration,
-    nextTrack,
-    prevTrack,
-    setPlaylist,
-    setCurrentTime,
-    setVolume,
-} = playerSlice.actions;
+export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume } = playerSlice.actions;
 
 export const audioMiddleware = (store) => (next) => (action) => {
     audioStateListener(store.dispatch);
     return next(action);
+};
+
+// Ваші функції-дії без використання createAsyncThunk
+export const playAudio = () => (dispatch) => {
+    audio.play();
+    dispatch(play());
+};
+
+export const pauseAudio = () => (dispatch) => {
+    audio.pause();
+    dispatch(pause());
+};
+
+export const stopAudio = () => (dispatch) => {
+    audio.pause();
+    audio.currentTime = 0;
+    dispatch(stop());
+};
+
+export const setAudioTrack = (trackIndex) => (dispatch, getState) => {
+    const state = getState();
+    const track = state.player.playlist.tracks[trackIndex];
+    if (track) {
+        audio.src = track.url;
+        audio.currentTime = 0;
+        audio.play();
+        dispatch(setTrack(trackIndex));
+        dispatch(play());
+    }
+};
+
+export const playNextTrack = () => (dispatch, getState) => {
+    const state = getState();
+    const nextIndex = (state.player.playlistIndex + 1) % state.player.playlist.tracks.length;
+    dispatch(setAudioTrack(nextIndex));
+    dispatch(nextTrack());
+};
+
+export const playPrevTrack = () => (dispatch, getState) => {
+    const state = getState();
+    const prevIndex = (state.player.playlistIndex - 1 + state.player.playlist.tracks.length) % state.player.playlist.tracks.length;
+    dispatch(setAudioTrack(prevIndex));
+    dispatch(prevTrack());
+};
+
+export const setAudioPlaylist = (playlist) => (dispatch) => {
+    dispatch(setPlaylist(playlist));
+    if (playlist.tracks.length > 0) {
+        dispatch(setAudioTrack(0));
+    }
+};
+
+export const setAudioCurrentTime = (currentTime) => (dispatch) => {
+    audio.currentTime = currentTime;
+    dispatch(setCurrentTime(currentTime));
+};
+
+export const addTrackToPlaylist = (track) => (dispatch, getState) => {
+    const state = getState();
+    const updatedPlaylist = {
+        ...state.player.playlist,
+        tracks: [...state.player.playlist.tracks, track]
+    };
+    dispatch(setAudioPlaylist(updatedPlaylist));
+
+    if (!state.player.isPlaying) {
+        dispatch(setAudioTrack(updatedPlaylist.tracks.length - 1));
+    }
 };
 
 export default playerSlice.reducer;
