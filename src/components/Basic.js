@@ -5,7 +5,7 @@ function Basic({ onFilesSelected }) {
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         onDrop: acceptedFiles => {
             if (acceptedFiles.length > 0) {
-                const newSongFile = acceptedFiles[0]; // Припускаємо, що додаємо лише один файл
+                const newSongFile = acceptedFiles[0]; 
                 onFilesSelected(newSongFile);
             }
         }

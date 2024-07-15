@@ -14,7 +14,6 @@ export default function LoginDialog({ open, handleClose, handleSignupOpen }) {
     const [password, setPassword] = useState("");
 
     const handleLogin = () => {
-        // Додайте тут логіку логіну
         handleClose();
     };
 

@@ -14,7 +14,6 @@ export default function SignupDialog({ open, handleClose }) {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const handleSignup = () => {
-        // Додайте тут логіку реєстрації
         handleClose();
     };
 
