@@ -12,8 +12,8 @@ export default function Player() {
     const songsList = useSelector(state => state.song.songsList);
     const audioRef = useRef(null);
     const [songTitle, setSongTitle] = useState("");
-    const [playbackMode, setPlaybackMode] = useState("normal"); // Доданий стан для режиму відтворення
-    const [isPlaying, setIsPlaying] = useState(false); // Доданий стан для відстеження відтворення
+    const [playbackMode, setPlaybackMode] = useState("normal"); 
+    const [isPlaying, setIsPlaying] = useState(false); 
     const [shuffleList, setShuffleList] = useState([]);
     const [shuffleIndex, setShuffleIndex] = useState(0);
 
@@ -28,7 +28,7 @@ export default function Player() {
         const player = audioRef.current;
 
         const handleCanPlay = () => {
-            setSongTitle(currentSong?.title); // Оновлення назви пісні після завантаження
+            setSongTitle(currentSong?.title); 
         };
 
         const handleEnded = () => {
@@ -94,7 +94,7 @@ export default function Player() {
             }
             player.load();
             player.play();
-        }, 100); // Додатковий інтервал для впевненості, що плеєр готовий до відтворення
+        }, 100); 
     };
 
     const togglePlaybackMode = () => {
@@ -131,7 +131,7 @@ export default function Player() {
                     <div className="bar bar4"></div>
                     <div className="bar bar5"></div>
                 </div>
-                <div className="name">{songTitle}</div> {/* Відображення назви пісні */}
+                <div className="name">{songTitle}</div> 
                 <div className="player-controls" onClick={togglePlaybackMode}>
                     {playbackMode === "normal" && (
                         <RepeatIcon  />
