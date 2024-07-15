@@ -7,7 +7,7 @@ import { Modal, Box, TextField, Button, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 
-const defaultPlaylistImage = '../image/default-img.jpg'; // Replace with your default image URL
+const defaultPlaylistImage = '../image/default-img.jpg';
 
 export default function Playlist({ search }) {
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
@@ -80,7 +80,7 @@ export default function Playlist({ search }) {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
-    
+
     const handleMoveSongUp = (playlistId, songId) => {
         dispatch(moveSongUp({ playlistId, songId }));
     };
