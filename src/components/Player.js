@@ -1,187 +1,97 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { changeSong } from "../Redux/reducer/song";
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ShuffleIcon from '@mui/icons-material/Shuffle';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    playAudio,
+    pauseAudio,
+    stopAudio,
+    playNextTrack,
+    playPrevTrack,
+    setAudioCurrentTime,
+    setVolume,
+    addTrackToPlaylist,
+    setAudioPlaylist
+} from '../Redux/playerSlice';
+import { useDropzone } from 'react-dropzone';
 
-export default function Player() {
-    const currentSong = useSelector(state => state.song.currentSong);
-    const songsList = useSelector(state => state.song.songsList);
-    const audioRef = useRef(null);
-    const [songTitle, setSongTitle] = useState("");
-    const [playbackMode, setPlaybackMode] = useState("normal"); 
-    const [isPlaying, setIsPlaying] = useState(false); 
-    const [shuffleList, setShuffleList] = useState([]);
-    const [shuffleIndex, setShuffleIndex] = useState(0);
-
+const Player = () => {
     const dispatch = useDispatch();
+    const { isPlaying, currentTime, volume, playlist, currentTrack } = useSelector(state => state.player);
 
-    const index = songsList.findIndex((item) => item.id === currentSong?.id);
-
-    const isPrev = () => (playbackMode === "shuffle" ? shuffleIndex > 0 : index > 0) && songsList.length > 1;
-    const isNext = () => songsList.length > 1;
-
-    useEffect(() => {
-        const player = audioRef.current;
-
-        const handleCanPlay = () => {
-            setSongTitle(currentSong?.title); 
-        };
-
-        const handleEnded = () => {
-            setIsPlaying(false);
-            if (playbackMode === "normal") {
-                if (index < songsList.length - 1) {
-                    changeAndPlaySong(songsList[index + 1]);
-                } else {
-                    changeAndPlaySong(songsList[0]);
-                }
-            } else if (playbackMode === "shuffle") {
-                if (shuffleIndex < shuffleList.length - 1) {
-                    setShuffleIndex(shuffleIndex + 1);
-                    changeAndPlaySong(shuffleList[shuffleIndex + 1]);
-                } else {
-                    const newShuffleList = shuffleArray([...songsList]);
-                    setShuffleList(newShuffleList);
-                    setShuffleIndex(0);
-                    changeAndPlaySong(newShuffleList[0]);
-                }
-            } else if (playbackMode === "repeat") {
-                changeAndPlaySong(currentSong);
-            }
-        };
-
-        const handlePlay = () => {
-            setIsPlaying(true);
-        };
-
-        const handlePause = () => {
-            setIsPlaying(false);
-        };
-
-        player.addEventListener('canplay', handleCanPlay);
-        player.addEventListener('ended', handleEnded);
-        player.addEventListener('play', handlePlay);
-        player.addEventListener('pause', handlePause);
-
-        return () => {
-            player.removeEventListener('canplay', handleCanPlay);
-            player.removeEventListener('ended', handleEnded);
-            player.removeEventListener('play', handlePlay);
-            player.removeEventListener('pause', handlePause);
-        };
-    }, [currentSong, playbackMode, shuffleIndex, shuffleList, index]);
-
-    useEffect(() => {
-        if (playbackMode === "shuffle") {
-            const newShuffleList = shuffleArray([...songsList]);
-            setShuffleList(newShuffleList);
-            setShuffleIndex(0);
-        }
-    }, [playbackMode, songsList]);
-
-    const changeAndPlaySong = (newSong) => {
-        const player = audioRef.current;
-
-        dispatch(changeSong(newSong));
-
-        setTimeout(() => {
-            if (!player.paused) {
-                player.pause();
-            }
-            player.load();
-            player.play();
-        }, 100); 
+    const handlePlay = () => {
+        dispatch(playAudio());
     };
 
-    const togglePlaybackMode = () => {
-        switch (playbackMode) {
-            case "normal":
-                setPlaybackMode("shuffle");
-                break;
-            case "shuffle":
-                setPlaybackMode("repeat");
-                break;
-            case "repeat":
-                setPlaybackMode("normal");
-                break;
-            default:
-                break;
-        }
+    const handlePause = () => {
+        dispatch(pauseAudio());
     };
 
-    const shuffleArray = (array) => {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
+    const handleStop = () => {
+        dispatch(stopAudio());
     };
+
+    const handleNext = () => {
+        dispatch(playNextTrack());
+    };
+
+    const handlePrev = () => {
+        dispatch(playPrevTrack());
+    };
+
+    const handleTimeChange = (event) => {
+        dispatch(setAudioCurrentTime(event.target.value));
+    };
+
+    const handleVolumeChange = (event) => {
+        dispatch(setVolume(event.target.value));
+    };
+
+    const onDrop = (acceptedFiles) => {
+        acceptedFiles.forEach((file) => {
+            const url = URL.createObjectURL(file);
+            const newTrack = {
+                _id: new Date().getTime().toString(),
+                url: url,
+                name: file.name
+            };
+            dispatch(addTrackToPlaylist(newTrack));
+            dispatch(setAudioPlaylist({
+                tracks: [...playlist.tracks, newTrack]
+            }));
+        });
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
+    
 
     return (
-        <div className="player">
-            <div>
-            <div className={`equalizer ${isPlaying ? 'playing' : ''}`}>
-                    <div className="bar bar1"></div>
-                    <div className="bar bar2"></div>
-                    <div className="bar bar3"></div>
-                    <div className="bar bar4"></div>
-                    <div className="bar bar5"></div>
-                </div>
-                <div className="name">{songTitle}</div> 
-                <div className="player-controls" onClick={togglePlaybackMode}>
-                    {playbackMode === "normal" && (
-                        <RepeatIcon  />
-                    )}
-                    {playbackMode === "shuffle" && (
-                        <ShuffleIcon />
-                    )}
-                    {playbackMode === "repeat" && (
-                        <RestartAltIcon/>
-                    )}
-                </div>
-                <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
-                    if (isPrev()) {
-                        if (playbackMode === "shuffle") {
-                            setShuffleIndex(shuffleIndex - 1);
-                            changeAndPlaySong(shuffleList[shuffleIndex - 1]);
-                        } else {
-                            changeAndPlaySong(songsList[index - 1]);
-                        }
-                    }
-                }}>
-                    <ArrowBackIosIcon />
-                </div>
-                <audio ref={audioRef} id="audio" controls>
-                    <source src={currentSong?.file} type="audio/mpeg" />
-                </audio>
-                <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
-                    if (isNext()) {
-                        if (playbackMode === "shuffle") {
-                            if (shuffleIndex < shuffleList.length - 1) {
-                                setShuffleIndex(shuffleIndex + 1);
-                                changeAndPlaySong(shuffleList[shuffleIndex + 1]);
-                            } else {
-                                const newShuffleList = shuffleArray([...songsList]);
-                                setShuffleList(newShuffleList);
-                                setShuffleIndex(0);
-                                changeAndPlaySong(newShuffleList[0]);
-                            }
-                        } else {
-                            if (index < songsList.length - 1) {
-                                changeAndPlaySong(songsList[index + 1]);
-                            } else {
-                                changeAndPlaySong(songsList[0]);
-                            }
-                        }
-                    }
-                }}>
-                    <ArrowForwardIosIcon />
-                </div>
+        <div>
+            <button onClick={handlePlay}>Play</button>
+            <button onClick={handlePause}>Pause</button>
+            <button onClick={handleStop}>Stop</button>
+            <button onClick={handleNext}>Next</button>
+            <button onClick={handlePrev}>Prev</button>
+            <input
+                type="range"
+                value={currentTime}
+                onChange={handleTimeChange}
+                min="0"
+                max="100"
+            />
+            <input
+                type="range"
+                value={volume}
+                onChange={handleVolumeChange}
+                min="0"
+                max="1"
+                step="0.01"
+            />
+            <div {...getRootProps({ className: 'dropzone' })} style={{ width: '100%', height: '100px', border: '2px dashed #ccc', borderRadius: '5px', textAlign: 'center', paddingTop: '30px', cursor: 'pointer' }}>
+                <input {...getInputProps()} />
+                <p>Перетягніть файли сюди або клікніть для вибору файлів</p>
             </div>
         </div>
     );
-}
+};
+
+export default Player;

@@ -4,17 +4,17 @@ import Menu from "./components/Menu";
 import Song from "./components/Song";
 import Playlist from "./components/Playlist";
 import Player from "./components/Player";
-import Basic from "./components/Basic";
 import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
 import Login from "./Login";
+import { setAudioPlaylist } from './Redux/playerSlice';
 
 export default function Home() {
+    const song = useSelector((state) => state.player.currentTrack); // Отримайте поточну пісню зі стору
+    const songsList = useSelector(state => state.player.playlist.tracks);
     const [isSongs, setIsSongs] = useState(true);
-    const song = useSelector((state) => state.song.currentSong);
-    const songsList = useSelector((state) => state.song.songsList);
     const [search, setSearch] = useState("");
     const [loginOpen, setLoginOpen] = useState(false);
     const [signupOpen, setSignupOpen] = useState(false);
@@ -53,6 +53,17 @@ export default function Home() {
         }
     };
 
+    const playlist = useSelector(state => state.player.playlist);
+
+    const samplePlaylist = {
+        tracks: []
+    };
+
+    React.useEffect(() => {
+        dispatch(setAudioPlaylist(samplePlaylist));
+    }, [dispatch]);
+
+
     return (
         <div className="home">
             <div className="sidebar-wrapper-left">
@@ -77,21 +88,18 @@ export default function Home() {
                             onChange={(e) => setSearch(e.target.value)}
                         />
                     </div>
-                    {isSongs ? (
-                        <div className="songs">
-                            {songsList
-                                .filter(data =>
-                                    data.title.toLowerCase().includes(search.toLowerCase())
-                                )
-                                .map(item => (
-                                    <div key={item.id} onClick={() => dispatch(changeSong(item, false))}>
-                                        <Song {...item} />
-                                    </div>
-                                ))}
-                        </div>
-                    ) : (
-                        <Playlist search={search} />
-                    )}
+                        {isSongs ? (
+                            <div className="songs">
+                                {songsList
+                                    .filter(song => song.title && song.title.toLowerCase().includes(search.toLowerCase()))
+                                    .map(song => (
+                                        <Song key={song.id} id={song.id} title={song.title} artist={song.artist} />
+                                    ))
+                                }
+                            </div>
+                        ) : (
+                            <Playlist search={search} />
+                        )}
                 </div>
             </main>
             <div className="sidebar-wrapper-right">
@@ -99,9 +107,9 @@ export default function Home() {
                     <div className="log-in-container">
                         <Login/>
                     </div>
-                    {song && <Player />}
-                    <div>
-                        <Basic onFilesSelected={handleAddSong} />
+                    <div className="app">
+                        <h1>Music Player</h1>
+                        <Player />
                     </div>
                 </aside>
             </div>
