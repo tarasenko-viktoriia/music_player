@@ -42,8 +42,8 @@ const listSlice = createSlice({
                 const index = playlist.songs.findIndex(song => song.id === songId);
                 if (index > 0) {
                     const movedSong = playlist.songs[index];
-                    playlist.songs.splice(index, 1); // Видаляємо пісню з поточного місця
-                    playlist.songs.splice(index - 1, 0, movedSong); // Вставляємо пісню на нове місце
+                    playlist.songs.splice(index, 1); 
+                    playlist.songs.splice(index - 1, 0, movedSong); 
                 }
             }
         },
@@ -55,8 +55,8 @@ const listSlice = createSlice({
                 const index = playlist.songs.findIndex(song => song.id === songId);
                 if (index !== -1 && index < playlist.songs.length - 1) {
                     const movedSong = playlist.songs[index];
-                    playlist.songs.splice(index, 1); // Видаляємо пісню з поточного місця
-                    playlist.songs.splice(index + 1, 0, movedSong); // Вставляємо пісню на нове місце
+                    playlist.songs.splice(index, 1); 
+                    playlist.songs.splice(index + 1, 0, movedSong); 
                 }
             }
         },
