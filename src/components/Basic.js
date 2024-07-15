@@ -21,7 +21,7 @@ function Basic({ onFilesSelected }) {
         <section className="container">
             <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
-                <p>Drag 'n' drop some files here, or click to select files</p>
+                <p>Click here to add a song</p>
             </div>
         </section>
     );

@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeList, addPlaylist, removePlaylist, changePlaylist } from "../Redux/reducer/list";
+import { changeList, addPlaylist, removePlaylist, changePlaylist, moveSongUp, moveSongDown} from "../Redux/reducer/list";
 import Song from "./Song";
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Modal, Box, TextField, Button, Menu, MenuItem } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+
 
 const defaultPlaylistImage = '../image/default-img.jpg'; // Replace with your default image URL
 
@@ -79,6 +80,14 @@ export default function Playlist({ search }) {
     const handleMenuClose = () => {
         setAnchorEl(null);
     };
+    
+    const handleMoveSongUp = (playlistId, songId) => {
+        dispatch(moveSongUp({ playlistId, songId }));
+    };
+
+    const handleMoveSongDown = (playlistId, songId) => {
+        dispatch(moveSongDown({ playlistId, songId }));
+    };
 
     return (
         <div>
@@ -97,6 +106,8 @@ export default function Playlist({ search }) {
                                     artwork={song.artwork}
                                     location="playlist"
                                     playlistId={selectedPlaylist.id}
+                                    onMoveUp={() => handleMoveSongUp(song.id, selectedPlaylist.id)}
+                                    onMoveDown={() => handleMoveSongDown(song.id, selectedPlaylist.id)}
                                 />
                             ))}
                     </div>

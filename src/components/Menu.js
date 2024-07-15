@@ -15,12 +15,12 @@ export default function Menu({ isSongs, setIsSongs }) {
                     Playlists
                 </a>
             </div>
-            <div className={`sidebar-left-component ${isSongs ? "active" : ""}`}>
+            {/* <div className={`sidebar-left-component ${isSongs ? "active" : ""}`}>
                 <img src="./image/log_in.png" alt="Frame 3" />
                 <a className="sidebar-left-item">
                     Log In
                 </a>
-            </div>
+            </div> */}
         </div>
     );
 }

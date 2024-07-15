@@ -35,6 +35,31 @@ const listSlice = createSlice({
                 playlist.songs.push(song);
             }
         },
+        moveSongUp: (state, action) => {
+            const { playlistId, songId } = action.payload;
+            const playlist = state.playlists.find(pl => pl.id === playlistId);
+            if (playlist) {
+                const index = playlist.songs.findIndex(song => song.id === songId);
+                if (index > 0) {
+                    const movedSong = playlist.songs[index];
+                    playlist.songs.splice(index, 1); // Видаляємо пісню з поточного місця
+                    playlist.songs.splice(index - 1, 0, movedSong); // Вставляємо пісню на нове місце
+                }
+            }
+        },
+
+        moveSongDown: (state, action) => {
+            const { playlistId, songId } = action.payload;
+            const playlist = state.playlists.find(pl => pl.id === playlistId);
+            if (playlist) {
+                const index = playlist.songs.findIndex(song => song.id === songId);
+                if (index !== -1 && index < playlist.songs.length - 1) {
+                    const movedSong = playlist.songs[index];
+                    playlist.songs.splice(index, 1); // Видаляємо пісню з поточного місця
+                    playlist.songs.splice(index + 1, 0, movedSong); // Вставляємо пісню на нове місце
+                }
+            }
+        },
     },
 });
 
@@ -44,7 +69,8 @@ export const {
     removePlaylist,
     changePlaylist,
     addSongToPlaylist,
-    removeSongFromPlaylist,
+    moveSongUp,
+    moveSongDown
 } = listSlice.actions;
 
 export default listSlice.reducer;
