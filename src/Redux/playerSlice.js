@@ -20,7 +20,7 @@ const initialState = {
     isPlaying: false,
     isStopped: true,
     duration: 0,
-    track: { _id: '', url: '', name: '' },
+    track: { id: '', title: '', artist:""},
     playlist: { _id: '', name: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
@@ -94,7 +94,6 @@ export const audioMiddleware = (store) => (next) => (action) => {
     return next(action);
 };
 
-// Ваші функції-дії без використання createAsyncThunk
 export const playAudio = () => (dispatch) => {
     audio.play();
     dispatch(play());

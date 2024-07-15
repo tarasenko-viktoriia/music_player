@@ -12,7 +12,7 @@ import Login from "./Login";
 import { setAudioPlaylist } from './Redux/playerSlice';
 
 export default function Home() {
-    const song = useSelector((state) => state.player.currentTrack); // Отримайте поточну пісню зі стору
+    const song = useSelector((state) => state.player.currentTrack); 
     const songsList = useSelector(state => state.player.playlist.tracks);
     const [isSongs, setIsSongs] = useState(true);
     const [search, setSearch] = useState("");

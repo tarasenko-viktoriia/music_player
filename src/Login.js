@@ -70,7 +70,6 @@ const authSlice = createSlice({
       state.profile = payload;
     },
     registerSuccess(state, { payload }) {
-      // Handle successful registration if needed
     },
   },
 });
@@ -224,7 +223,7 @@ const AvatarUpload = () => {
   const [uploadAvatar, { isLoading }] = useUploadAvatarMutation();
   const dispatch = useDispatch();
   const userId = useSelector((state) => state.auth.payload?.sub?.id);
-  const [avatarUrl, setAvatarUrl] = useState(null); // Додано стан для зберігання URL аватара
+  const [avatarUrl, setAvatarUrl] = useState(null); 
 
   const handleFileChange = (e) => {
     setAvatar(e.target.files[0]);
@@ -275,7 +274,7 @@ function App() {
           <Switch>
             <Route path="/" component={PageMain} exact />
             <Route path="/login" component={PageLogin} />
-            <Route path="/register" component={RegisterForm} /> {/* Route for registration */}
+            <Route path="/register" component={RegisterForm} />
           </Switch>
         </main>
       </Router>
@@ -288,7 +287,7 @@ const PageMain = () => (
     <h1>Головна</h1>
     <ShowNick />
     <ChangeNick />
-    <AvatarUpload /> {/* Додано для завантаження аватара */}
+    <AvatarUpload />
   </>
 );
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { changeSong, updateSongDetails, moveSongUp, moveSongDown } from "../Redux/reducer/song";
 import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
@@ -13,7 +13,7 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Se
 const defaultPlaylistImage = '../image/default-img.jpg';
 
 export default function Song(props) {
-    const song = useSelector(state => state.song.currentSong);
+    const song = useSelector(state => state.player.track); // Змінено з currentTrack на track
     const playlists = useSelector(state => state.list.playlists);
     const dispatch = useDispatch();
 
@@ -47,6 +47,7 @@ export default function Song(props) {
             playlist.songs.includes(props.id)
         );
     }, [playlists, props.id]);
+    
 
     const handleAddSong = (e) => {
         e.stopPropagation();
