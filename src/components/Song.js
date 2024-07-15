@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { changeSong, updateSongDetails } from "../Redux/reducer/song";
+import { changeSong, updateSongDetails, moveSongUp, moveSongDown } from "../Redux/reducer/song";
 import { addSongToPlaylist, addPlaylist } from "../Redux/reducer/list";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, MenuItem, Select, TextField } from '@mui/material';
 
 const defaultPlaylistImage = '../image/default-img.jpg';
@@ -120,6 +122,16 @@ export default function Song(props) {
         setEditOpen(false);
     };
 
+    const handleMoveSongUp = (e) => {
+        e.stopPropagation();
+        dispatch(moveSongUp(props.id));
+    };
+
+    const handleMoveSongDown = (e) => {
+        e.stopPropagation();
+        dispatch(moveSongDown(props.id));
+    };
+
     return (
         <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
             <div className="song-container">
@@ -136,6 +148,8 @@ export default function Song(props) {
                 </div>
                 <AddIcon onClick={handleAddSong} />
                 <EditIcon onClick={handleEditSong} />
+                <ArrowUpwardIcon onClick={handleMoveSongUp} />
+                <ArrowDownwardIcon onClick={handleMoveSongDown} />
             </div>
 
             <Dialog open={open} onClose={handleDialogClose}>

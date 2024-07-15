@@ -1,4 +1,3 @@
-// songSlice.js
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -24,10 +23,26 @@ const songSlice = createSlice({
                 song.artist = artist;
                 song.image = image;
             }
-        }
+        },
+        moveSongUp: (state, action) => {
+            const index = state.songsList.findIndex(song => song.id === action.payload);
+            if (index > 0) {
+                const temp = state.songsList[index];
+                state.songsList[index] = state.songsList[index - 1];
+                state.songsList[index - 1] = temp;
+            }
+        },
+        moveSongDown: (state, action) => {
+            const index = state.songsList.findIndex(song => song.id === action.payload);
+            if (index < state.songsList.length - 1) {
+                const temp = state.songsList[index];
+                state.songsList[index] = state.songsList[index + 1];
+                state.songsList[index + 1] = temp;
+            }
+        },
     },
 });
 
-export const { changeSong, addSong, updateSongDetails } = songSlice.actions;
+export const { changeSong, addSong, updateSongDetails, moveSongUp, moveSongDown } = songSlice.actions;
 
 export default songSlice.reducer;
