@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Router, Route, Switch } from "react-router-dom";
-import createHistory from "history/createBrowserHistory";
 import { useSelector, useDispatch } from "react-redux";
 import Menu from "./components/Menu";
 import Song from "./components/Song";
@@ -49,7 +47,7 @@ export default function Home() {
                 file: URL.createObjectURL(newSongFile),
             };
             dispatch(addSong(newSong));
-            dispatch(changeSong(newSong, false)); // Забезпечуємо, що відтворення не почнеться автоматично
+            dispatch(changeSong(newSong, false));
             setNewSongTitle("");
             setNewSongFile(null);
         }
