@@ -20,8 +20,8 @@ const initialState = {
     isPlaying: false,
     isStopped: true,
     duration: 0,
-    track: { _id: '', url: '', name: '' },
-    playlist: { _id: '', name: '', tracks: [] },
+    track: { _id: '', url: '', title: '' },
+    playlist: { _id: '', title: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
     volume: 1.0
@@ -64,7 +64,7 @@ export const playerSlice = createSlice({
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
-            state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '' };
+            state.track = state.playlist.tracks[0] || { _id: '', url: '', title: '' };
             state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {
@@ -77,12 +77,12 @@ export const playerSlice = createSlice({
 
         updateSongDetails: (state, action) => {
             const { id, title, artist } = action.payload;
-            const trackToUpdate = state.playlist.tracks.find(track => track.id === id);
-            if (trackToUpdate) {
-                trackToUpdate.title = title;
-                trackToUpdate.artist = artist;
+            const song = state.playlist.tracks.find(track => track._id === id);
+            if (song) {
+                song.title = title;
+                song.artist = artist;
             }
-        }
+        },
         
     },
 });

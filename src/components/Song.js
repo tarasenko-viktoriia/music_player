@@ -6,13 +6,14 @@ import PauseIcon from '@mui/icons-material/Pause';
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
-const Song = ({ id, title, artist }) => {
+const Song = ({ id }) => {
     const dispatch = useDispatch();
+    const song = useSelector(state => state.player.playlist.tracks.find(track => track._id === id));
     const isPlaying = useSelector(state => state.player.isPlaying);
-    const [modalOpen, setModalOpen] = useState(false);
+
     const [editOpen, setEditOpen] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(title || ''); 
-    const [editedArtist, setEditedArtist] = useState(artist || '');
+    const [editedTitle, setEditedTitle] = useState(song ? song.name : '');
+    const [editedArtist, setEditedArtist] = useState(song ? song.artist : ''); // Додайте artist до треку, якщо він відсутній
 
     const handlePause = () => {
         dispatch(pauseAudio());
@@ -23,6 +24,10 @@ const Song = ({ id, title, artist }) => {
     };
 
     const handleOpenModal = () => {
+        if (song) {
+            setEditedTitle(song.name);
+            setEditedArtist(song.artist);
+        }
         setEditOpen(true);
     };
 
@@ -34,6 +39,10 @@ const Song = ({ id, title, artist }) => {
         dispatch(updateSongDetails({ id, title: editedTitle, artist: editedArtist }));
         setEditOpen(false);
     };
+
+    if (!song) {
+        return null; // Або можна вивести повідомлення, що пісня не знайдена
+    }
 
     return (
         <div className="song">
@@ -47,8 +56,8 @@ const Song = ({ id, title, artist }) => {
                         )}
                     </div>
                     <div className="song-info">
-                        <div className="song-title">{title}</div>
-                        <div className="song-artist">{artist}</div>
+                        <div className="song-title">{song.name}</div>
+                        <div className="song-artist">{song.artist}</div> {/* Переконайтесь, що у трека є властивість artist */}
                     </div>
                 </div>
                 <div className="edit-button">
