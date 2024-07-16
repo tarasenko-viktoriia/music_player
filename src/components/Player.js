@@ -44,6 +44,7 @@ const Player = () => {
 
     return (
         <div>
+            <audio id="audio" />
             <button onClick={handlePlay}>Play</button>
             <button onClick={handlePause}>Pause</button>
             <button onClick={handleStop}>Stop</button>

@@ -96,20 +96,14 @@ export default function Song(props) {
     };
 
     const handleChangeSong = () => {
-        if (song && song.id === props.id) {
-            const player = document.getElementById("audio");
+        const player = document.getElementById("audio");
+        if (player) {
             if (isPlaying) {
                 player.pause();
             } else {
                 player.play();
             }
             setIsPlaying(!isPlaying);
-        } else {
-            dispatch(changeSong(props));
-            const player = document.getElementById("audio");
-            player.load();
-            player.play();
-            setIsPlaying(true);
         }
     };
 
