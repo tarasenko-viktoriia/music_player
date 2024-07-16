@@ -8,12 +8,12 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const Song = ({ id }) => {
     const dispatch = useDispatch();
-    const song = useSelector(state => state.player.playlist.tracks.find(track => track._id === id));
+    const song = useSelector(state => state.player.playlist.tracks.find(track => track._id === id)) || { name: '', artist: '' }; // заміна title на name
     const isPlaying = useSelector(state => state.player.isPlaying);
 
     const [editOpen, setEditOpen] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(song ? song.title : '');
-    const [editedArtist, setEditedArtist] = useState(song ? song.artist : '');
+    const [editedTitle, setEditedTitle] = useState(song.name); // заміна title на name
+    const [editedArtist, setEditedArtist] = useState(song.artist);
 
     const handlePause = () => {
         dispatch(pauseAudio());
@@ -25,7 +25,7 @@ const Song = ({ id }) => {
 
     const handleOpenModal = () => {
         if (song) {
-            setEditedTitle(song.title);
+            setEditedTitle(song.name); // заміна title на name
             setEditedArtist(song.artist);
         }
         setEditOpen(true);
@@ -36,13 +36,9 @@ const Song = ({ id }) => {
     };
 
     const handleSaveEditedSong = () => {
-        dispatch(updateSongDetails({ id, title: editedTitle, artist: editedArtist }));
+        dispatch(updateSongDetails({ id, name: editedTitle, artist: editedArtist })); // заміна title на name
         setEditOpen(false);
     };
-
-    if (!song) {
-        return null;
-    }
 
     return (
         <div className="song">
@@ -56,7 +52,7 @@ const Song = ({ id }) => {
                         )}
                     </div>
                     <div className="song-info">
-                        <div className="song-title">{song.title}</div>
+                        <div className="song-title">{song.name}</div> {/* заміна title на name */}
                         <div className="song-artist">{song.artist}</div>
                     </div>
                 </div>

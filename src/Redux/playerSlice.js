@@ -20,7 +20,7 @@ const initialState = {
     isPlaying: false,
     isStopped: true,
     duration: 0,
-    track: { _id: '', url: '', title: '', artist: '' },
+    track: { _id: '', url: '', name: '', artist: '' }, // заміна title на name
     playlist: { _id: '', title: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
@@ -46,7 +46,7 @@ export const playerSlice = createSlice({
         setTrack: (state, action) => {
             state.track = state.playlist.tracks[action.payload];
             state.playlistIndex = action.payload;
-            state.currentTime = 0; 
+            state.currentTime = 0;
         },
         setDuration: (state, action) => {
             state.duration = action.payload;
@@ -64,7 +64,7 @@ export const playerSlice = createSlice({
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
-            state.track = state.playlist.tracks[0] || { _id: '', url: '', title: '', artist: '' };
+            state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '', artist: '' }; // заміна title на name
             state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {
@@ -75,10 +75,10 @@ export const playerSlice = createSlice({
             audio.volume = action.payload;
         },
         updateSongDetails: (state, action) => {
-            const { id, title, artist } = action.payload;
+            const { id, name, artist } = action.payload; // заміна title на name
             const song = state.playlist.tracks.find(track => track._id === id);
             if (song) {
-                song.title = title;
+                song.name = name;
                 song.artist = artist;
             }
         },
@@ -92,7 +92,6 @@ export const audioMiddleware = (store) => (next) => (action) => {
     return next(action);
 };
 
-// Ваші функції-дії без використання createAsyncThunk
 export const playAudio = () => (dispatch) => {
     audio.play();
     dispatch(play());
