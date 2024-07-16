@@ -87,9 +87,10 @@ export const playerSlice = createSlice({
             state.playlist.tracks.push({
                 _id: track._id,
                 url: track.url,
-                title: track.title,
-                artist: track.artist
+                title: track.name, // Тут використовуємо track.name для title
+                artist: track.artist  // Можна встановити "Unknown Artist" за замовчуванням
             });
+            console.log('Add Track:', track); // Debug log
         },
     },
 });
