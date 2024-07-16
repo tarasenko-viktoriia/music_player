@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { pauseAudio, playAudio, updateSongDetails } from '../Redux/playerSlice';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 
 const Song = ({ id }) => {
@@ -12,8 +12,8 @@ const Song = ({ id }) => {
     const isPlaying = useSelector(state => state.player.isPlaying);
 
     const [editOpen, setEditOpen] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(song ? song.name : '');
-    const [editedArtist, setEditedArtist] = useState(song ? song.artist : ''); // Додайте artist до треку, якщо він відсутній
+    const [editedTitle, setEditedTitle] = useState(song ? song.title : '');
+    const [editedArtist, setEditedArtist] = useState(song ? song.artist : '');
 
     const handlePause = () => {
         dispatch(pauseAudio());
@@ -25,7 +25,7 @@ const Song = ({ id }) => {
 
     const handleOpenModal = () => {
         if (song) {
-            setEditedTitle(song.name);
+            setEditedTitle(song.title);
             setEditedArtist(song.artist);
         }
         setEditOpen(true);
@@ -41,7 +41,7 @@ const Song = ({ id }) => {
     };
 
     if (!song) {
-        return null; // Або можна вивести повідомлення, що пісня не знайдена
+        return null;
     }
 
     return (
@@ -56,14 +56,14 @@ const Song = ({ id }) => {
                         )}
                     </div>
                     <div className="song-info">
-                        <div className="song-title">{song.name}</div>
-                        <div className="song-artist">{song.artist}</div> {/* Переконайтесь, що у трека є властивість artist */}
+                        <div className="song-title">{song.title}</div>
+                        <div className="song-artist">{song.artist}</div>
                     </div>
                 </div>
                 <div className="edit-button">
-                    <Button onClick={handleOpenModal} startIcon={<EditIcon />} variant="outlined">
-                        Редагувати
-                    </Button>
+                    <IconButton onClick={handleOpenModal}>
+                        <EditIcon />
+                    </IconButton>
                 </div>
             </div>
 

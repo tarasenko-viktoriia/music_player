@@ -20,7 +20,7 @@ const initialState = {
     isPlaying: false,
     isStopped: true,
     duration: 0,
-    track: { _id: '', url: '', title: '' },
+    track: { _id: '', url: '', title: '', artist: '' },
     playlist: { _id: '', title: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
@@ -64,7 +64,7 @@ export const playerSlice = createSlice({
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
-            state.track = state.playlist.tracks[0] || { _id: '', url: '', title: '' };
+            state.track = state.playlist.tracks[0] || { _id: '', url: '', title: '', artist: '' };
             state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {
@@ -74,7 +74,6 @@ export const playerSlice = createSlice({
             state.volume = action.payload;
             audio.volume = action.payload;
         },
-
         updateSongDetails: (state, action) => {
             const { id, title, artist } = action.payload;
             const song = state.playlist.tracks.find(track => track._id === id);
@@ -83,11 +82,19 @@ export const playerSlice = createSlice({
                 song.artist = artist;
             }
         },
-        
+        addTrackToPlaylist: (state, action) => {
+            const track = action.payload;
+            state.playlist.tracks.push({
+                _id: track._id,
+                url: track.url,
+                title: track.title,
+                artist: track.artist
+            });
+        },
     },
 });
 
-export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails } = playerSlice.actions;
+export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails, addTrackToPlaylist } = playerSlice.actions;
 
 export const audioMiddleware = (store) => (next) => (action) => {
     audioStateListener(store.dispatch);
@@ -149,17 +156,8 @@ export const setAudioCurrentTime = (currentTime) => (dispatch) => {
     dispatch(setCurrentTime(currentTime));
 };
 
-export const addTrackToPlaylist = (track) => (dispatch, getState) => {
-    const state = getState();
-    const updatedPlaylist = {
-        ...state.player.playlist,
-        tracks: [...state.player.playlist.tracks, track]
-    };
-    dispatch(setAudioPlaylist(updatedPlaylist));
-
-    if (!state.player.isPlaying) {
-        dispatch(setAudioTrack(updatedPlaylist.tracks.length - 1));
-    }
+export const addTrackToPlaylistAction = (track) => (dispatch) => {
+    dispatch(addTrackToPlaylist(track));
 };
 
 export default playerSlice.reducer;
