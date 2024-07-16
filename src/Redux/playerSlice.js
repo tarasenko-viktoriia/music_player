@@ -20,7 +20,7 @@ const initialState = {
     isPlaying: false,
     isStopped: true,
     duration: 0,
-    track: { _id: '', url: '', name: '', artist: '' }, // заміна title на name
+    track: { _id: '', url: '', name: '', artist: '' }, 
     playlist: { _id: '', title: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
@@ -64,7 +64,7 @@ export const playerSlice = createSlice({
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
-            state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '', artist: '' }; // заміна title на name
+            state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '', artist: '' }; 
             state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {
@@ -75,7 +75,7 @@ export const playerSlice = createSlice({
             audio.volume = action.payload;
         },
         updateSongDetails: (state, action) => {
-            const { id, name, artist } = action.payload; // заміна title на name
+            const { id, name, artist } = action.payload; 
             const song = state.playlist.tracks.find(track => track._id === id);
             if (song) {
                 song.name = name;

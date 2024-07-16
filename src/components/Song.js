@@ -8,11 +8,11 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const Song = ({ id }) => {
     const dispatch = useDispatch();
-    const song = useSelector(state => state.player.playlist.tracks.find(track => track._id === id)) || { name: '', artist: '' }; // заміна title на name
+    const song = useSelector(state => state.player.playlist.tracks.find(track => track._id === id)) || { name: '', artist: '' }; 
     const isPlaying = useSelector(state => state.player.isPlaying);
 
     const [editOpen, setEditOpen] = useState(false);
-    const [editedTitle, setEditedTitle] = useState(song.name); // заміна title на name
+    const [editedTitle, setEditedTitle] = useState(song.name); 
     const [editedArtist, setEditedArtist] = useState(song.artist);
 
     const handlePause = () => {
@@ -25,7 +25,7 @@ const Song = ({ id }) => {
 
     const handleOpenModal = () => {
         if (song) {
-            setEditedTitle(song.name); // заміна title на name
+            setEditedTitle(song.name); 
             setEditedArtist(song.artist);
         }
         setEditOpen(true);
@@ -36,7 +36,7 @@ const Song = ({ id }) => {
     };
 
     const handleSaveEditedSong = () => {
-        dispatch(updateSongDetails({ id, name: editedTitle, artist: editedArtist })); // заміна title на name
+        dispatch(updateSongDetails({ id, name: editedTitle, artist: editedArtist })); 
         setEditOpen(false);
     };
 
@@ -52,7 +52,7 @@ const Song = ({ id }) => {
                         )}
                     </div>
                     <div className="song-info">
-                        <div className="song-title">{song.name}</div> {/* заміна title на name */}
+                        <div className="song-title">{song.name}</div> 
                         <div className="song-artist">{song.artist}</div>
                     </div>
                 </div>
