@@ -82,20 +82,10 @@ export const playerSlice = createSlice({
                 song.artist = artist;
             }
         },
-        addTrackToPlaylist: (state, action) => {
-            const track = action.payload;
-            state.playlist.tracks.push({
-                _id: track._id,
-                url: track.url,
-                title: track.name, // Тут використовуємо track.name для title
-                artist: track.artist  // Можна встановити "Unknown Artist" за замовчуванням
-            });
-            console.log('Add Track:', track); // Debug log
-        },
     },
 });
 
-export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails, addTrackToPlaylist } = playerSlice.actions;
+export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails } = playerSlice.actions;
 
 export const audioMiddleware = (store) => (next) => (action) => {
     audioStateListener(store.dispatch);
@@ -157,8 +147,17 @@ export const setAudioCurrentTime = (currentTime) => (dispatch) => {
     dispatch(setCurrentTime(currentTime));
 };
 
-export const addTrackToPlaylistAction = (track) => (dispatch) => {
-    dispatch(addTrackToPlaylist(track));
+export const addTrackToPlaylist = (track) => (dispatch, getState) => {
+    const state = getState();
+    const updatedPlaylist = {
+        ...state.player.playlist,
+        tracks: [...state.player.playlist.tracks, track]
+    };
+    dispatch(setAudioPlaylist(updatedPlaylist));
+
+    if (!state.player.isPlaying) {
+        dispatch(setAudioTrack(updatedPlaylist.tracks.length - 1));
+    }
 };
 
 export default playerSlice.reducer;
