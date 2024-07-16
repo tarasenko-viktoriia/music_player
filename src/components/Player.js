@@ -7,15 +7,12 @@ import {
     playNextTrack,
     playPrevTrack,
     setAudioCurrentTime,
-    setVolume,
-    addTrackToPlaylist,
-    setAudioPlaylist
+    setVolume
 } from '../Redux/playerSlice';
-import { useDropzone } from 'react-dropzone';
 
 const Player = () => {
     const dispatch = useDispatch();
-    const { isPlaying, currentTime, volume, playlist, currentTrack } = useSelector(state => state.player);
+    const { isPlaying, currentTime, volume } = useSelector(state => state.player);
 
     const handlePlay = () => {
         dispatch(playAudio());
@@ -45,25 +42,6 @@ const Player = () => {
         dispatch(setVolume(event.target.value));
     };
 
-    const onDrop = (acceptedFiles) => {
-        acceptedFiles.forEach((file) => {
-            const url = URL.createObjectURL(file);
-            const newTrack = {
-                _id: new Date().getTime().toString(),
-                url: url,
-                name: file.name
-            };
-            dispatch(addTrackToPlaylist(newTrack));
-            dispatch(setAudioPlaylist({
-                tracks: [...playlist.tracks, newTrack]
-            }));
-        });
-    };
-
-    const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-    
-
     return (
         <div>
             <button onClick={handlePlay}>Play</button>
@@ -86,10 +64,6 @@ const Player = () => {
                 max="1"
                 step="0.01"
             />
-            <div {...getRootProps({ className: 'dropzone' })} style={{ width: '100%', height: '100px', border: '2px dashed #ccc', borderRadius: '5px', textAlign: 'center', paddingTop: '30px', cursor: 'pointer' }}>
-                <input {...getInputProps()} />
-                <p>Перетягніть файли сюди або клікніть для вибору файлів</p>
-            </div>
         </div>
     );
 };

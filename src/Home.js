@@ -9,7 +9,9 @@ import SignupDialog from "./components/SignupDialog";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
 import Login from "./Login";
-import { setAudioPlaylist } from './Redux/playerSlice';
+import { setAudioPlaylist, addTrackToPlaylist } from './Redux/playerSlice';
+
+import { useDropzone } from 'react-dropzone';
 
 export default function Home() {
     const song = useSelector((state) => state.player.currentTrack); 
@@ -53,7 +55,22 @@ export default function Home() {
         }
     };
 
-    const playlist = useSelector(state => state.player.playlist);
+    const onDrop = (acceptedFiles) => {
+        acceptedFiles.forEach((file) => {
+            const url = URL.createObjectURL(file);
+            const newTrack = {
+                _id: new Date().getTime().toString(),
+                url: url,
+                name: file.name
+            };
+            dispatch(addTrackToPlaylist(newTrack));
+            dispatch(setAudioPlaylist({
+                tracks: [...songsList, newTrack]
+            }));
+        });
+    };
+
+    const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
     const samplePlaylist = {
         tracks: []
@@ -62,7 +79,6 @@ export default function Home() {
     React.useEffect(() => {
         dispatch(setAudioPlaylist(samplePlaylist));
     }, [dispatch]);
-
 
     return (
         <div className="home">
@@ -90,12 +106,11 @@ export default function Home() {
                     </div>
                         {isSongs ? (
                             <div className="songs">
-                                {songsList
-                                    .filter(song => song.title && song.title.toLowerCase().includes(search.toLowerCase()))
-                                    .map(song => (
-                                        <Song key={song.id} id={song.id} title={song.title} artist={song.artist} />
-                                    ))
-                                }
+                                {songsList.map(item => (
+                                        <div key={item.id} onClick={() => dispatch(changeSong(item))}>
+                                            <Song {...item} />
+                                        </div>
+                                    ))}
                             </div>
                         ) : (
                             <Playlist search={search} />
@@ -110,6 +125,10 @@ export default function Home() {
                     <div className="app">
                         <h1>Music Player</h1>
                         <Player />
+                    </div>
+                    <div {...getRootProps({ className: 'dropzone' })} style={{ width: '100%', height: '100px', border: '2px dashed #ccc', borderRadius: '5px', textAlign: 'center', paddingTop: '30px', cursor: 'pointer' }}>
+                        <input {...getInputProps()} />
+                        <p>Перетягніть файли сюди або клікніть для вибору файлів</p>
                     </div>
                 </aside>
             </div>
