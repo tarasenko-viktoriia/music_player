@@ -21,7 +21,7 @@ const initialState = {
     isStopped: true,
     duration: 0,
     track: { id: '', title: '', artist:""},
-    playlist: { _id: '', name: '', tracks: [] },
+    playlist: { id: '', name: '', tracks: [] },
     playlistIndex: 0,
     currentTime: 0,
     volume: 1.0
@@ -64,7 +64,7 @@ export const playerSlice = createSlice({
         setPlaylist: (state, action) => {
             state.playlist = action.payload;
             state.playlistIndex = 0;
-            state.track = state.playlist.tracks[0] || { _id: '', url: '', name: '' };
+            state.track = state.playlist.tracks[0] || { id: '', url: '', name: '' };
             state.currentTime = 0;
         },
         setCurrentTime: (state, action) => {

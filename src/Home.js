@@ -59,7 +59,7 @@ export default function Home() {
         acceptedFiles.forEach((file) => {
             const url = URL.createObjectURL(file);
             const newTrack = {
-                _id: new Date().getTime().toString(),
+                id: new Date().getTime().toString(),
                 url: url,
                 name: file.name
             };
