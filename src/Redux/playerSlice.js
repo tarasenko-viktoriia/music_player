@@ -4,7 +4,7 @@ const audio = new Audio();
 
 const audioStateListener = (dispatch) => {
     audio.onended = () => {
-        dispatch(playerSlice.actions.playNextTrack());
+        dispatch(playNextTrack()); 
     };
 
     audio.ondurationchange = () => {
@@ -90,7 +90,7 @@ export const playerSlice = createSlice({
 export const { play, pause, stop, setTrack, setDuration, nextTrack, prevTrack, setPlaylist, setCurrentTime, setVolume, updateSongDetails } = playerSlice.actions;
 
 export const audioMiddleware = (store) => (next) => (action) => {
-    audioStateListener(store.dispatch);
+    audioStateListener(store.dispatch);  // Ensure this is correctly imported and used
     return next(action);
 };
 
