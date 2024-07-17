@@ -153,11 +153,12 @@ export default function Player() {
                         }
                     }
                 }}>
-                    <ArrowBackIosIcon />
                 </div>
+                <ArrowBackIosIcon />
                 <audio ref={audioRef} id="audio" controls>
                     <source src={currentSong?.file} type="audio/mpeg" />
                 </audio>
+                <ArrowForwardIosIcon />
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
                         if (playbackMode === "shuffle") {
@@ -179,7 +180,6 @@ export default function Player() {
                         }
                     }
                 }}>
-                    <ArrowForwardIosIcon />
                 </div>
             </div>
         </div>
