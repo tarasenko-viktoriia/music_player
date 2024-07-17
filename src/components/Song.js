@@ -94,24 +94,6 @@ export default function Song(props) {
         }
     };
 
-    const handleChangeSong = () => {
-        if (song && song.id === props.id) {
-            const player = document.getElementById("audio");
-            if (isPlaying) {
-                player.pause();
-            } else {
-                player.play();
-            }
-            setIsPlaying(!isPlaying);
-        } else {
-            dispatch(changeSong(props));
-            const player = document.getElementById("audio");
-            player.load();
-            player.play();
-            setIsPlaying(true);
-        }
-    };
-
     const handleEditSong = (e) => {
         e.stopPropagation();
         setEditOpen(true);
@@ -133,7 +115,7 @@ export default function Song(props) {
     };
 
     return (
-        <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={handleChangeSong}>
+        <div className={`song ${isPlaying ? 'playing' : ''}`} onClick={changeSong}>
             <div className="song-container">
                 <div className="name-song-container">
                     {isPlaying ? (
