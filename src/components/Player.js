@@ -153,35 +153,33 @@ export default function Player() {
                         }
                     }
                 }}>
-                    <div className="player-container">
-                        <ArrowBackIosIcon className="arrow-player" />
-                        <audio ref={audioRef} id="audio" controls>
-                            <source src={currentSong?.file} type="audio/mpeg" />
-                        </audio>
-                        <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
-                            if (isNext()) {
-                                if (playbackMode === "shuffle") {
-                                    if (shuffleIndex < shuffleList.length - 1) {
-                                        setShuffleIndex(shuffleIndex + 1);
-                                        changeAndPlaySong(shuffleList[shuffleIndex + 1]);
-                                    } else {
-                                        const newShuffleList = shuffleArray([...songsList]);
-                                        setShuffleList(newShuffleList);
-                                        setShuffleIndex(0);
-                                        changeAndPlaySong(newShuffleList[0]);
-                                    }
-                                } else {
-                                    if (index < songsList.length - 1) {
-                                        changeAndPlaySong(songsList[index + 1]);
-                                    } else {
-                                        changeAndPlaySong(songsList[0]);
-                                    }
-                                }
+                    <ArrowBackIosIcon />
+                </div>
+                <audio ref={audioRef} id="audio" controls>
+                    <source src={currentSong?.file} type="audio/mpeg" />
+                </audio>
+                <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
+                    if (isNext()) {
+                        if (playbackMode === "shuffle") {
+                            if (shuffleIndex < shuffleList.length - 1) {
+                                setShuffleIndex(shuffleIndex + 1);
+                                changeAndPlaySong(shuffleList[shuffleIndex + 1]);
+                            } else {
+                                const newShuffleList = shuffleArray([...songsList]);
+                                setShuffleList(newShuffleList);
+                                setShuffleIndex(0);
+                                changeAndPlaySong(newShuffleList[0]);
                             }
-                        }}>
-                        </div>
-                        <ArrowForwardIosIcon />
-                    </div>
+                        } else {
+                            if (index < songsList.length - 1) {
+                                changeAndPlaySong(songsList[index + 1]);
+                            } else {
+                                changeAndPlaySong(songsList[0]);
+                            }
+                        }
+                    }
+                }}>
+                    <ArrowForwardIosIcon />
                 </div>
             </div>
         </div>
