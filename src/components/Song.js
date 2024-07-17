@@ -146,10 +146,12 @@ export default function Song(props) {
                         <div className="song-artist">{props.artist}</div>
                     </div>
                 </div>
-                <AddIcon onClick={handleAddSong} />
-                <EditIcon onClick={handleEditSong} />
-                <ArrowUpwardIcon onClick={handleMoveSongUp} />
-                <ArrowDownwardIcon onClick={handleMoveSongDown} />
+                <div className="song-button">
+                    <AddIcon onClick={handleAddSong} />
+                    <EditIcon onClick={handleEditSong} />
+                    <ArrowUpwardIcon onClick={handleMoveSongUp} />
+                    <ArrowDownwardIcon onClick={handleMoveSongDown} />
+                </div>
             </div>
 
             <Dialog open={open} onClose={handleDialogClose}>
