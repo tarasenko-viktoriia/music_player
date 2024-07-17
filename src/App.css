@@ -192,13 +192,20 @@ html, body {
 }
 /* Player */
 .player {
-  background-color: #9f8ba783;
+  background-color: rgb(241,243,244);
+  border-radius: 15px;
+  padding: 10px;
 }
 
 #audio {
-  width: 100%;
+  width: 85%;
   height: 20px;
   font-size: 10px;
+}
+
+.arrow-player:hover {
+  background-color: rgb(229,231,232);
+  border-radius: 50%;
 }
 
 .song-title{
@@ -376,6 +383,11 @@ html, body {
 
 .cursor-disabled {
   cursor: not-allowed;
+}
+
+.player-container {
+  display: flex;
+  justify-content: center;
 }
 
 
