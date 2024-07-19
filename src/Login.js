@@ -8,6 +8,8 @@ import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import Modal from 'react-modal';
+import EditIcon from '@mui/icons-material/Edit';
+import LogoutIcon from '@mui/icons-material/Logout';
 
 const history = createHistory();
 
@@ -49,9 +51,7 @@ const Logout = () => {
   }
 
   return (
-    <button onClick={handleLogout}>
-      Logout
-    </button>
+    <LogoutIcon onClick={handleLogout}/>
   );
 };
 
@@ -317,7 +317,7 @@ const Header = ({ onLoginClick, onRegisterClick, onProfileClick }) => {
       )}
       {isLoggedIn && (
         <>
-          <button onClick={onProfileClick}>Редагувати профіль</button>
+          <EditIcon onClick={onProfileClick}/>
           <Logout />
         </>
       )}
