@@ -2,13 +2,12 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Menu from "./components/Menu";
 import Song from "./components/Song";
+import { BrowserRouter as Router, Link} from 'react-router-dom'
 import Playlist from "./components/Playlist";
 import Player from "./components/Player";
 import Basic from "./components/Basic";
 import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
 import Login from "./Login";
 
@@ -72,13 +71,13 @@ export default function Home() {
             <main className="main-container">
                 <div className="hero-container">
                     <div className="input-container">
-                        <input
-                            className="search-input"
-                            type="search"
-                            placeholder="Search..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                            <input
+                                className="search-input"
+                                type="search"
+                                placeholder="Search..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
                     </div>
                     {isSongs ? (
                         <div className="songs">

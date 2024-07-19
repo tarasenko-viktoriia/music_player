@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider, useSelector, useDispatch } from 'react-redux';
-import { BrowserRouter as Router, Routes, Link, Route, useNavigate } from 'react-router-dom'
+import { BrowserRouter as Router, Link} from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
