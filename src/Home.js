@@ -7,6 +7,7 @@ import Player from "./components/Player";
 import Basic from "./components/Basic";
 import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from "@mui/material";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
 import Login from "./Login";
@@ -62,7 +63,9 @@ export default function Home() {
                         <p>Bits</p>
                     </div>
                     <div>
-                        <Menu isSongs={isSongs} setIsSongs={setIsSongs} />
+                        <Router>
+                            <Menu isSongs={isSongs} setIsSongs={setIsSongs} />
+                        </Router>
                     </div>
                 </aside>
             </div>

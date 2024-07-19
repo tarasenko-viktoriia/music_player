@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { configureStore, createSlice } from '@reduxjs/toolkit';
 import { Provider, useSelector, useDispatch } from 'react-redux';
-import { Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Link, Route, useNavigate } from 'react-router-dom'
 import createHistory from 'history/createBrowserHistory';
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { graphqlRequestBaseQuery } from '@rtk-query/graphql-request-base-query';
@@ -10,6 +10,7 @@ import { persistReducer, persistStore } from 'redux-persist';
 import Modal from 'react-modal';
 import EditIcon from '@mui/icons-material/Edit';
 import LogoutIcon from '@mui/icons-material/Logout';
+import LoginIcon from '@mui/icons-material/Login';
 
 const history = createHistory();
 
@@ -312,12 +313,12 @@ const Header = ({ onLoginClick, onRegisterClick, onProfileClick }) => {
       <ShowLogin />
       {!isLoggedIn && (
         <>
-          <button onClick={onLoginClick}>Увійти</button>
+        <Link to="/login"><LoginIcon onClick={onLoginClick}/></Link>
         </>
       )}
       {isLoggedIn && (
         <>
-          <EditIcon onClick={onProfileClick}/>
+          <Link to="/edit"><EditIcon onClick={onProfileClick}/></Link>
           <Logout />
         </>
       )}
@@ -340,22 +341,26 @@ const App = () => {
   return (
     <Provider store={store}>
       <Router history={history}>
-        <Header onLoginClick={openLoginModal} onRegisterClick={openRegisterModal} onProfileClick={openProfileModal} />
-        <Modal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal}>
-          <h2>Login</h2>
-          <LoginForm onClose={closeLoginModal} />
-          <p>
-            Якщо ви не зареєстровані, натисність <span onClick={() => { closeLoginModal(); openRegisterModal(); }}>тут</span>.
-          </p>
-        </Modal>
-        <Modal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal}>
-          <h2>Register</h2>
-          <RegisterForm onClose={closeRegisterModal} />
-        </Modal>
-        <Modal isOpen={isProfileModalOpen} onRequestClose={closeProfileModal}>
-          <h2>Edit Profile</h2>
-          <ProfileModal onClose={closeProfileModal} />
-        </Modal>
+          <Header onLoginClick={openLoginModal} onRegisterClick={openRegisterModal} onProfileClick={openProfileModal} />
+          <Link to="/login">
+            <Modal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal}>
+              <h2>Login</h2>
+              <LoginForm onClose={closeLoginModal} />
+              <Link to="/register"><p onClick={() => { closeLoginModal(); openRegisterModal(); }}>Якщо ви не зареєстровані, натисність тут</p></Link>
+            </Modal>
+          </Link>
+          <Link to="/register">
+            <Modal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal}>
+              <h2>Register</h2>
+              <RegisterForm onClose={closeRegisterModal} />
+            </Modal>
+          </Link>
+          <Link to="/edit">
+            <Modal isOpen={isProfileModalOpen} onRequestClose={closeProfileModal}>
+              <h2>Edit Profile</h2>
+              <ProfileModal onClose={closeProfileModal} />
+            </Modal>
+          </Link>
       </Router>
     </Provider>
   );

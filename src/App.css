@@ -11,6 +11,11 @@ html, body {
   padding: 0;
 }
 
+a {
+  color: white;
+  text-decoration: none;
+}
+
 .home {
   display: flex;
   flex-direction: row;
