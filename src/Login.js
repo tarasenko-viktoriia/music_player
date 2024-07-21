@@ -313,12 +313,12 @@ const Header = ({ onLoginClick, onRegisterClick, onProfileClick }) => {
       <ShowLogin />
       {!isLoggedIn && (
         <>
-        <Link to="/login"><LoginIcon onClick={onLoginClick}/></Link>
+        <LoginIcon onClick={onLoginClick}/>
         </>
       )}
       {isLoggedIn && (
         <>
-          <Link to="/edit"><EditIcon onClick={onProfileClick}/></Link>
+          <EditIcon onClick={onProfileClick}/>
           <Logout />
         </>
       )}
@@ -342,25 +342,19 @@ const App = () => {
     <Provider store={store}>
       <Router history={history}>
           <Header onLoginClick={openLoginModal} onRegisterClick={openRegisterModal} onProfileClick={openProfileModal} />
-          <Link to="/login">
             <Modal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal}>
               <h2>Login</h2>
               <LoginForm onClose={closeLoginModal} />
-              <Link to="/register"><p onClick={() => { closeLoginModal(); openRegisterModal(); }}>Якщо ви не зареєстровані, натисність тут</p></Link>
+              <p onClick={() => { closeLoginModal(); openRegisterModal(); }}>Якщо ви не зареєстровані, натисність тут</p>
             </Modal>
-          </Link>
-          <Link to="/register">
             <Modal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal}>
               <h2>Register</h2>
               <RegisterForm onClose={closeRegisterModal} />
             </Modal>
-          </Link>
-          <Link to="/edit">
             <Modal isOpen={isProfileModalOpen} onRequestClose={closeProfileModal}>
               <h2>Edit Profile</h2>
               <ProfileModal onClose={closeProfileModal} />
             </Modal>
-          </Link>
       </Router>
     </Provider>
   );
