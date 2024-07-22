@@ -191,6 +191,7 @@ import RepeatIcon from '@mui/icons-material/Repeat';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import PauseIcon from '@mui/icons-material/Pause';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 
 export default function Player() {
     const currentSong = useSelector(state => state.song.currentSong);
@@ -201,6 +202,8 @@ export default function Player() {
     const [isPlaying, setIsPlaying] = useState(false);
     const [shuffleList, setShuffleList] = useState([]);
     const [shuffleIndex, setShuffleIndex] = useState(0);
+    const [volume, setVolume] = useState(1);
+    const [showVolumeControl, setShowVolumeControl] = useState(false); // Добавлено состояние для видимости ползунка громкости
 
     const dispatch = useDispatch();
 
@@ -282,20 +285,12 @@ export default function Player() {
         }, 100);
     };
 
-    const togglePlaybackMode = () => {
-        switch (playbackMode) {
-            case "normal":
-                setPlaybackMode("shuffle");
-                break;
-            case "shuffle":
-                setPlaybackMode("repeat");
-                break;
-            case "repeat":
-                setPlaybackMode("normal");
-                break;
-            default:
-                break;
-        }
+    const toggleNormalMode = () => {
+        setPlaybackMode("normal");
+    };
+
+    const toggleShuffleMode = () => {
+        setPlaybackMode("shuffle");
     };
 
     const shuffleArray = (array) => {
@@ -313,6 +308,16 @@ export default function Player() {
         } else {
             player.play();
         }
+    };
+
+    const handleVolumeChange = (event) => {
+        const newVolume = event.target.value;
+        setVolume(newVolume);
+        audioRef.current.volume = newVolume;
+    };
+
+    const toggleVolumeControl = () => {
+        setShowVolumeControl(!showVolumeControl);
     };
 
     return (
@@ -367,12 +372,32 @@ export default function Player() {
                 }}>
                     <ArrowForwardIosIcon />
                 </div>
-                <div className="player-controls" onClick={togglePlaybackMode}>
-                    {playbackMode === "normal" && <RepeatIcon />}
-                    {playbackMode === "shuffle" && <ShuffleIcon />}
-                    {playbackMode === "repeat" && <RestartAltIcon />}
+                <div className="player-controls" onClick={toggleNormalMode}>
+                    <RepeatIcon />
+                </div>
+                <div className="player-controls" onClick={toggleShuffleMode}>
+                    <ShuffleIcon />
+                </div>
+                <div className="volume-control-wrapper">
+                    <div className="player-controls volume-button" onClick={toggleVolumeControl}>
+                        <VolumeUpIcon />
+                    </div>
+                    {showVolumeControl && (
+                        <div className="volume-control">
+                            <input
+                                type="range"
+                                min="0"
+                                max="1"
+                                step="0.01"
+                                value={volume}
+                                onChange={handleVolumeChange}
+                                className="vertical-slider"
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
     );
 }
+

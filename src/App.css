@@ -229,10 +229,61 @@ header {
   height: 75px;
 }
 /* Player */
+
+
+.volume-control-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.volume-button {
+  cursor: pointer;
+}
+
+.volume-control {
+  position: absolute;
+  bottom: 70px; 
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.vertical-slider {
+  transform: rotate(-90deg);
+  width: 90px; 
+  height: 5px; 
+  appearance: none;
+  outline: none; 
+  opacity: 0.7; 
+  transition: opacity 0.2s;
+  border-radius: 5px;
+  background: #3c2247;
+}
+.vertical-slider:hover {
+  opacity: 1; 
+}
+.vertical-slider::-webkit-slider-thumb {
+  -webkit-appearance: none; 
+  appearance: none;
+  width: 15px; 
+  height: 15px; 
+  background: white; 
+  cursor: pointer; 
+  border-radius: 50%; 
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.5); 
+}
 .player {
-  background-color: rgb(241,243,244);
+  position: relative;
+  background-color: rgba(147, 128, 173, 0.637);
   border-radius: 15px;
   padding: 0;
+  color: white;
+  font-family: Poppins;
+  font-size: 20px;
+  padding: 10px;
+  height: 250px;
 }
 
 #audio {
@@ -445,7 +496,7 @@ header {
 /* Dropzone */
 
 .dropzone {
-  background-color: rgba(168, 133, 210, 0.3);
+  background-color: rgba(147, 128, 173, 0.637);
   border-radius: 20px;
   padding: 20px;
   margin: 10px 5px 0 5px;
