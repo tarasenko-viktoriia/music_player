@@ -6,7 +6,6 @@ import { BrowserRouter as Router, Link} from 'react-router-dom'
 import Playlist from "./components/Playlist";
 import Player from "./components/Player";
 import Basic from "./components/Basic";
-import LoginDialog from "./components/LoginDialog";
 import SignupDialog from "./components/SignupDialog";
 import { addSong, changeSong } from "./Redux/reducer/song"; 
 import Login from "./Login";
@@ -107,11 +106,6 @@ export default function Home() {
                     </div>
                 </aside>
             </div>
-            <LoginDialog
-                open={loginOpen}
-                handleClose={handleLoginClose}
-                handleSignupOpen={handleSignupOpen}
-            />
             <SignupDialog open={signupOpen} handleClose={handleSignupClose} />
         </div>
     );
