@@ -33,6 +33,23 @@ a {
   background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
 }
 
+.sidebar-wrapper-left {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+.sidebar-wrapper-right {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  overflow-y: auto;
+}
+
+
 .sidebar-left, .sidebar-right {
   flex-grow: 1;
   background: linear-gradient(135deg, 
@@ -127,6 +144,10 @@ header {
 
 /* main */
 .main-container {
+  margin-left: 300px; 
+  margin-right: 300px; 
+  padding: 20px; 
+  overflow-y: auto;
   width: 60%;
   background: radial-gradient(circle at 50% 50%, rgba(28, 15, 50, 1) 20%, rgb(21, 11, 34) 50%);
 }
