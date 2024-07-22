@@ -203,7 +203,9 @@ export default function Player() {
     const [shuffleList, setShuffleList] = useState([]);
     const [shuffleIndex, setShuffleIndex] = useState(0);
     const [volume, setVolume] = useState(1);
-    const [showVolumeControl, setShowVolumeControl] = useState(false); // Добавлено состояние для видимости ползунка громкости
+    const [showVolumeControl, setShowVolumeControl] = useState(false);
+    const [duration, setDuration] = useState(0);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const dispatch = useDispatch();
 
@@ -217,6 +219,11 @@ export default function Player() {
 
         const handleCanPlay = () => {
             setSongTitle(currentSong?.title);
+            setDuration(player.duration);
+        };
+
+        const handleTimeUpdate = () => {
+            setCurrentTime(player.currentTime);
         };
 
         const handleEnded = () => {
@@ -251,12 +258,14 @@ export default function Player() {
         };
 
         player.addEventListener('canplay', handleCanPlay);
+        player.addEventListener('timeupdate', handleTimeUpdate);
         player.addEventListener('ended', handleEnded);
         player.addEventListener('play', handlePlay);
         player.addEventListener('pause', handlePause);
 
         return () => {
             player.removeEventListener('canplay', handleCanPlay);
+            player.removeEventListener('timeupdate', handleTimeUpdate);
             player.removeEventListener('ended', handleEnded);
             player.removeEventListener('play', handlePlay);
             player.removeEventListener('pause', handlePause);
@@ -320,6 +329,18 @@ export default function Player() {
         setShowVolumeControl(!showVolumeControl);
     };
 
+    const handleSliderChange = (event) => {
+        const newTime = event.target.value;
+        audioRef.current.currentTime = newTime;
+        setCurrentTime(newTime);
+    };
+
+    const formatTime = (time) => {
+        const minutes = Math.floor(time / 60);
+        const seconds = Math.floor(time % 60);
+        return `${minutes}:${seconds < 10 ? `0${seconds}` : seconds}`;
+    };
+
     return (
         <div className="player">
             <div className={`equalizer ${isPlaying ? 'playing' : ''}`}>
@@ -349,6 +370,19 @@ export default function Player() {
                 <audio ref={audioRef} id="audio">
                     <source src={currentSong?.file} type="audio/mpeg" />
                 </audio>
+                <div className="time-slider-container">
+                    <span className="current-time">{formatTime(currentTime)}</span>
+                    <input
+                        type="range"
+                        min="0"
+                        max={duration}
+                        step="0.1"
+                        value={currentTime}
+                        onChange={handleSliderChange}
+                        className="time-slider"
+                    />
+                    <span className="duration">{formatTime(duration)}</span>
+                </div>
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
                         if (playbackMode === "shuffle") {
@@ -400,4 +434,3 @@ export default function Player() {
         </div>
     );
 }
-
