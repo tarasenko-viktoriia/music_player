@@ -123,26 +123,15 @@ export default function Player() {
 
     return (
         <div className="player">
-            <div>
             <div className={`equalizer ${isPlaying ? 'playing' : ''}`}>
-                    <div className="bar bar1"></div>
-                    <div className="bar bar2"></div>
-                    <div className="bar bar3"></div>
-                    <div className="bar bar4"></div>
-                    <div className="bar bar5"></div>
-                </div>
-                <div className="name">{songTitle}</div> 
-                <div className="player-controls" onClick={togglePlaybackMode}>
-                    {playbackMode === "normal" && (
-                        <RepeatIcon  />
-                    )}
-                    {playbackMode === "shuffle" && (
-                        <ShuffleIcon />
-                    )}
-                    {playbackMode === "repeat" && (
-                        <RestartAltIcon/>
-                    )}
-                </div>
+                <div className="bar bar1"></div>
+                <div className="bar bar2"></div>
+                <div className="bar bar3"></div>
+                <div className="bar bar4"></div>
+                <div className="bar bar5"></div>
+            </div>
+            <div className="name">{songTitle}</div>
+            <div className="player-buttons">
                 <div className={`player-controls ${!isPrev() && "cursor-disabled"}`} onClick={() => {
                     if (isPrev()) {
                         if (playbackMode === "shuffle") {
@@ -153,12 +142,11 @@ export default function Player() {
                         }
                     }
                 }}>
+                    <ArrowBackIosIcon />
                 </div>
-                <ArrowBackIosIcon />
                 <audio ref={audioRef} id="audio" controls>
                     <source src={currentSong?.file} type="audio/mpeg" />
                 </audio>
-                <ArrowForwardIosIcon />
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
                         if (playbackMode === "shuffle") {
@@ -180,6 +168,12 @@ export default function Player() {
                         }
                     }
                 }}>
+                    <ArrowForwardIosIcon />
+                    <div className="player-controls" onClick={togglePlaybackMode}>
+                        {playbackMode === "normal" && <RepeatIcon />}
+                        {playbackMode === "shuffle" && <ShuffleIcon />}
+                        {playbackMode === "repeat" && <RestartAltIcon />}
+                    </div>
                 </div>
             </div>
         </div>
