@@ -210,57 +210,54 @@ export default function Player() {
     const isNext = () => songsList.length > 1;
 
     useEffect(() => {
-        if (currentSong) {
-            const newAudio = new Audio(currentSong.file);
-            audioRef.current = newAudio;
+        const player = audioRef.current;
 
-            const handleCanPlay = () => {
-                setSongTitle(currentSong.title);
-            };
+        const handleCanPlay = () => {
+            setSongTitle(currentSong?.title);
+        };
 
-            const handleEnded = () => {
-                setIsPlaying(false);
-                if (playbackMode === "normal") {
-                    if (index < songsList.length - 1) {
-                        changeAndPlaySong(songsList[index + 1]);
-                    } else {
-                        changeAndPlaySong(songsList[0]);
-                    }
-                } else if (playbackMode === "shuffle") {
-                    if (shuffleIndex < shuffleList.length - 1) {
-                        setShuffleIndex(shuffleIndex + 1);
-                        changeAndPlaySong(shuffleList[shuffleIndex + 1]);
-                    } else {
-                        const newShuffleList = shuffleArray([...songsList]);
-                        setShuffleList(newShuffleList);
-                        setShuffleIndex(0);
-                        changeAndPlaySong(newShuffleList[0]);
-                    }
-                } else if (playbackMode === "repeat") {
-                    changeAndPlaySong(currentSong);
+        const handleEnded = () => {
+            setIsPlaying(false);
+            if (playbackMode === "normal") {
+                if (index < songsList.length - 1) {
+                    changeAndPlaySong(songsList[index + 1]);
+                } else {
+                    changeAndPlaySong(songsList[0]);
                 }
-            };
+            } else if (playbackMode === "shuffle") {
+                if (shuffleIndex < shuffleList.length - 1) {
+                    setShuffleIndex(shuffleIndex + 1);
+                    changeAndPlaySong(shuffleList[shuffleIndex + 1]);
+                } else {
+                    const newShuffleList = shuffleArray([...songsList]);
+                    setShuffleList(newShuffleList);
+                    setShuffleIndex(0);
+                    changeAndPlaySong(newShuffleList[0]);
+                }
+            } else if (playbackMode === "repeat") {
+                changeAndPlaySong(currentSong);
+            }
+        };
 
-            const handlePlay = () => {
-                setIsPlaying(true);
-            };
+        const handlePlay = () => {
+            setIsPlaying(true);
+        };
 
-            const handlePause = () => {
-                setIsPlaying(false);
-            };
+        const handlePause = () => {
+            setIsPlaying(false);
+        };
 
-            newAudio.addEventListener('canplay', handleCanPlay);
-            newAudio.addEventListener('ended', handleEnded);
-            newAudio.addEventListener('play', handlePlay);
-            newAudio.addEventListener('pause', handlePause);
+        player.addEventListener('canplay', handleCanPlay);
+        player.addEventListener('ended', handleEnded);
+        player.addEventListener('play', handlePlay);
+        player.addEventListener('pause', handlePause);
 
-            return () => {
-                newAudio.removeEventListener('canplay', handleCanPlay);
-                newAudio.removeEventListener('ended', handleEnded);
-                newAudio.removeEventListener('play', handlePlay);
-                newAudio.removeEventListener('pause', handlePause);
-            };
-        }
+        return () => {
+            player.removeEventListener('canplay', handleCanPlay);
+            player.removeEventListener('ended', handleEnded);
+            player.removeEventListener('play', handlePlay);
+            player.removeEventListener('pause', handlePause);
+        };
     }, [currentSong, playbackMode, shuffleIndex, shuffleList, index]);
 
     useEffect(() => {
@@ -272,14 +269,17 @@ export default function Player() {
     }, [playbackMode, songsList]);
 
     const changeAndPlaySong = (newSong) => {
-        if (audioRef.current) {
-            audioRef.current.pause();
-            audioRef.current.src = newSong.file;
-            audioRef.current.load();
-            audioRef.current.play();
-        }
+        const player = audioRef.current;
 
         dispatch(changeSong(newSong));
+
+        setTimeout(() => {
+            if (!player.paused) {
+                player.pause();
+            }
+            player.load();
+            player.play();
+        }, 100);
     };
 
     const togglePlaybackMode = () => {
@@ -306,13 +306,12 @@ export default function Player() {
         return array;
     };
 
-    const handlePlayPause = () => {
-        if (audioRef.current) {
-            if (isPlaying) {
-                audioRef.current.pause();
-            } else {
-                audioRef.current.play();
-            }
+    const togglePlayPause = () => {
+        const player = audioRef.current;
+        if (isPlaying) {
+            player.pause();
+        } else {
+            player.play();
         }
     };
 
@@ -339,9 +338,12 @@ export default function Player() {
                 }}>
                     <ArrowBackIosIcon />
                 </div>
-                <div className="play-pause-button" onClick={handlePlayPause}>
+                <div className="player-controls play-pause" onClick={togglePlayPause}>
                     {isPlaying ? <PauseIcon /> : <PlayArrowIcon />}
                 </div>
+                <audio ref={audioRef} id="audio">
+                    <source src={currentSong?.file} type="audio/mpeg" />
+                </audio>
                 <div className={`player-controls ${!isNext() && "cursor-disabled"}`} onClick={() => {
                     if (isNext()) {
                         if (playbackMode === "shuffle") {
