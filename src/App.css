@@ -505,3 +505,62 @@ header {
   font-family: "Poppins";
   font-weight: 500;
 }
+
+
+.player {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.equalizer {
+  display: flex;
+}
+
+.bar {
+  width: 4px;
+  height: 20px;
+  background-color: #fff;
+  margin: 2px;
+}
+
+.name {
+  font-size: 20px;
+  margin: 10px 0;
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin: 10px 0;
+}
+
+.volume-control-wrapper {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.time-slider-container {
+  display: flex;
+  align-items: center;
+}
+
+.current-time, .duration {
+  margin: 0 10px;
+}
+
+.player-controls {
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+.play-pause {
+  margin: 0 20px;
+}
+
+.cursor-disabled {
+  cursor: not-allowed;
+}
