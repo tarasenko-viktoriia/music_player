@@ -50,5 +50,5 @@ export const playerSlice = createSlice({
     },
 });
 
-export const { actions } = playerSlice;
+export const { play, pause, stop, setTrack, setDuration, setPlaylist, setCurrentTime, setVolume } = playerSlice.actions;
 export default playerSlice.reducer;
