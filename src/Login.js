@@ -34,11 +34,23 @@ const ShowLogin = () => {
 
   return (
     <span>
-      {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '50px', borderRadius: '50%' }} />}
-      Hi, {login || 'Anon'} <br/>
+      {avatarUrl ? (
+        <img
+          src={avatarUrl}
+          alt="avatar"
+          style={{ width: '50px', borderRadius: '50%' }}
+        />
+      ) : (
+        <img
+          src="default-avatar-url" // Замість цього вкажіть URL за замовчуванням, якщо потрібно
+          alt="default-avatar"
+          style={{ width: '50px', borderRadius: '50%' }}
+        />
+      )}
+      <div>Hi, {login || 'Anon'}</div>
       {isLoggedIn && (
         <>
-          <div>Nickname: {nick} </div>
+          <div>Nickname: {nick}</div>
         </>
       )}
     </span>
@@ -267,30 +279,42 @@ const ProfileModal = ({ onClose }) => {
       formData.append('avatar', avatar);
       const result = await uploadAvatar({ _id: userId, avatar: formData });
       if (result.data?.UserUpsert?.avatar?.url) {
+        console.log('Uploaded Avatar URL:', result.data.UserUpsert.avatar.url); // Додайте цей рядок
         dispatch(setProfile({ avatar: { url: result.data.UserUpsert.avatar.url } }));
       }
     }
-
+  
     if (nick) {
       const result = await setUserNick({ _id: userId, nick });
       if (result.data?.UserUpsert?.nick) {
         dispatch(setProfile({ nick: result.data.UserUpsert.nick }));
       }
     }
-
+  
     onClose();
   };
 
   return (
     <div>
-      <input value={nick} onChange={(e) => setNick(e.target.value)} placeholder="New Nickname" />
-      <input type="file" onChange={handleFileChange} />
-      <button onClick={handleUpload} disabled={isAvatarLoading || isNickLoading}>
+      <input 
+        value={nick} 
+        onChange={(e) => setNick(e.target.value)} 
+        placeholder="New Nickname" 
+      />
+      <input 
+        type="file" 
+        onChange={handleFileChange} 
+      />
+      <button 
+        onClick={handleUpload} 
+        disabled={isAvatarLoading || isNickLoading}
+      >
         Save Changes
       </button>
     </div>
   );
 };
+
 
 const store = configureStore({
   reducer: {
