@@ -14,6 +14,7 @@ export default function Player() {
     const songsList = useSelector(state => state.song.songsList);
     const audioRef = useRef(null);
     const [songTitle, setSongTitle] = useState("");
+    const [songArtist, setSongArtist] = useState("");
     const [playbackMode, setPlaybackMode] = useState("normal");
     const [isPlaying, setIsPlaying] = useState(false);
     const [shuffleList, setShuffleList] = useState([]);
@@ -35,6 +36,7 @@ export default function Player() {
 
         const handleCanPlay = () => {
             setSongTitle(currentSong?.title);
+            setSongArtist(currentSong?.artist);
             setDuration(player.duration);
         };
 
@@ -167,6 +169,7 @@ export default function Player() {
                 <div className="bar bar5"></div>
               </div>
               <div className="name">{songTitle}</div>
+              <div className="name">{songArtist}</div>
               <div className="player-row">
                 <div className="volume-control-wrapper">
                   <div className="player-controls volume-button" onClick={toggleVolumeControl}>
