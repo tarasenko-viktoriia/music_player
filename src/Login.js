@@ -30,14 +30,21 @@ const ShowLogin = () => {
   const login = useSelector((state) => state.auth.payload?.sub.login);
   const nick = useSelector((state) => state.auth.payload?.sub.nick);
   const avatarUrl = useSelector((state) => state.auth.profile?.avatar?.url);
+  const isLoggedIn = useSelector((state) => state.auth.token);
 
   return (
     <span>
       {avatarUrl && <img src={avatarUrl} alt="avatar" style={{ width: '50px', borderRadius: '50%' }} />}
-      Hi, {nick || login || 'Anon'}
+      Hi, {login || 'Anon'} <br/>
+      {isLoggedIn && (
+        <>
+          <div>Nickname: {nick} </div>
+        </>
+      )}
     </span>
   );
 };
+
 
 const Logout = () => {
   const dispatch = useDispatch();
@@ -73,7 +80,12 @@ const authSlice = createSlice({
       state.profile = null;
     },
     setProfile(state, { payload }) {
-      state.profile = payload;
+      if (payload.avatar) {
+        state.profile = { ...state.profile, avatar: payload.avatar };
+      }
+      if (payload.nick) {
+        state.payload = { ...state.payload, sub: { ...state.payload.sub, nick: payload.nick } };
+      }
     },
     registerSuccess(state, { payload: token }) {
       const decoded = jwtDecode(token);
@@ -84,6 +96,7 @@ const authSlice = createSlice({
     },
   },
 });
+
 
 const { login, logout, registerSuccess, setProfile } = authSlice.actions;
 
@@ -259,7 +272,10 @@ const ProfileModal = ({ onClose }) => {
     }
 
     if (nick) {
-      await setUserNick({ _id: userId, nick });
+      const result = await setUserNick({ _id: userId, nick });
+      if (result.data?.UserUpsert?.nick) {
+        dispatch(setProfile({ nick: result.data.UserUpsert.nick }));
+      }
     }
 
     onClose();
