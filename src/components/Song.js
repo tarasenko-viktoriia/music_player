@@ -257,6 +257,7 @@ export default function Song(props) {
     const song = useSelector(state => state.song.currentSong);
     const playlists = useSelector(state => state.list.playlists);
     const dispatch = useDispatch();
+    const audioRef = useRef(new Audio(props.url));
 
     const [open, setOpen] = useState(false);
     const [editOpen, setEditOpen] = useState(false);
@@ -268,10 +269,6 @@ export default function Song(props) {
     const [editedArtist, setEditedArtist] = useState(props.artist);
     const [editedImage, setEditedImage] = useState(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [audioContext, setAudioContext] = useState(null);
-    const [audioBuffer, setAudioBuffer] = useState(null);
-    const [source, setSource] = useState(null);
-    const [gainNode, setGainNode] = useState(null);
 
     useEffect(() => {
         setEditedTitle(props.title);
@@ -284,51 +281,52 @@ export default function Song(props) {
             setIsPlaying(true);
         } else {
             setIsPlaying(false);
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+            }
         }
     }, [song, props.id]);
 
     useEffect(() => {
-        if (!audioContext) {
-            setAudioContext(new (window.AudioContext || window.webkitAudioContext)());
-        }
+        const handleEnded = () => {
+            setIsPlaying(false);
+        };
+        audioRef.current.addEventListener('ended', handleEnded);
+        return () => {
+            audioRef.current.removeEventListener('ended', handleEnded);
+        };
     }, []);
 
-    useEffect(() => {
-        if (audioContext && props.url) {
-            fetch(props.url)
-                .then(response => response.arrayBuffer())
-                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
-                .then(decodedData => {
-                    setAudioBuffer(decodedData);
-                })
-                .catch(error => console.error('Error with audio decoding:', error));
-        }
-    }, [audioContext, props.url]);
-
     const playAudio = () => {
-        if (audioBuffer) {
-            const sourceNode = audioContext.createBufferSource();
-            sourceNode.buffer = audioBuffer;
-
-            const gainNode = audioContext.createGain();
-            sourceNode.connect(gainNode);
-            gainNode.connect(audioContext.destination);
-
-            sourceNode.start();
-            setSource(sourceNode);
-            setGainNode(gainNode);
-
-            sourceNode.onended = () => {
-                setIsPlaying(false);
-                setSource(null);
-            };
+        if (audioRef.current.paused) {
+            audioRef.current.play().catch(error => console.error('Audio play error:', error));
         }
     };
 
-    const stopAudio = () => {
-        if (source) {
-            source.stop();
-            setSource(null);
+    const pauseAudio = () => {
+        if (!audioRef.current.paused) {
+            audioRef.current.pause();
+        }
+    };
+
+    const handleChangeSong = () => {
+        if (song && song.id === props.id) {
+            if (isPlaying) {
+                pauseAudio();
+            } else {
+                playAudio();
+            }
+            setIsPlaying(!isPlaying);
+        } else {
+            dispatch(changeSong(props));
+            if (audioRef.current) {
+                audioRef.current.pause();
+                audioRef.current.currentTime = 0;
+            }
+            audioRef.current = new Audio(props.url);
+            playAudio();
+            setIsPlaying(true);
         }
     };
 
@@ -375,22 +373,6 @@ export default function Song(props) {
     const handleImageChangePlaylist = (event) => {
         if (event.target.files && event.target.files[0]) {
             setNewPlaylistImage(URL.createObjectURL(event.target.files[0]));
-        }
-    };
-
-    const handleChangeSong = () => {
-        if (song && song.id === props.id) {
-            if (isPlaying) {
-                stopAudio();
-            } else {
-                playAudio();
-            }
-            setIsPlaying(!isPlaying);
-        } else {
-            dispatch(changeSong(props));
-            stopAudio();
-            playAudio();
-            setIsPlaying(true);
         }
     };
 
@@ -520,4 +502,3 @@ export default function Song(props) {
         </div>
     );
 }
-
