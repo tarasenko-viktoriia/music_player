@@ -33,26 +33,22 @@ const ShowLogin = () => {
   const isLoggedIn = useSelector((state) => state.auth.token);
 
   return (
-    <span>
-      {avatarUrl ? (
-        <img
-          src={avatarUrl}
-          alt="avatar"
-          style={{ width: '50px', borderRadius: '50%' }}
-        />
-      ) : (
-        <img
-          src="default-avatar-url" // Замість цього вкажіть URL за замовчуванням, якщо потрібно
-          alt="default-avatar"
-          style={{ width: '50px', borderRadius: '50%' }}
-        />
-      )}
-      <div>Hi, {login || 'Anon'}</div>
+    <span style={{ display: 'flex', alignItems: 'center' }}>
       {isLoggedIn && (
         <>
-          <div>Nickname: {nick}</div>
+          <img
+            src={avatarUrl || '../../logo.png'}
+            alt="avatar"
+            style={{ width: '50px', borderRadius: '50%', marginRight: '10px' }}
+          />
         </>
       )}
+      <div>
+        <div>Hi, {login || 'Anon'}</div>
+        {isLoggedIn && (
+          <div>Nickname: {nick}</div>
+        )}
+      </div>
     </span>
   );
 };
